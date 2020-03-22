@@ -6,8 +6,11 @@ using System.Threading.Tasks;
 
 namespace Durak
 {
-    public class Player
+    abstract class Player
     {
+        private const int _minCards = 6;
+        protected int MinCards { get {return _minCards;} }
+        //TODO: protected
         internal List<Card> CardsOnHands = new List<Card>();
 
         internal void ShowOnHands()
@@ -15,10 +18,10 @@ namespace Durak
             Console.WriteLine("You cards are:");
             for (int i = 0; i < CardsOnHands.Count; i++)
             {
-                if (CardsOnHands[i].trump == true)
-                    Console.WriteLine($"{i+1} - {CardsOnHands[i].name}, {CardsOnHands[i].suit.ToUpper()}");
+                if (CardsOnHands[i].Trump == true)
+                    Console.WriteLine($"{i + 1} - {CardsOnHands[i].Name}, {CardsOnHands[i].Suit.ToUpper()}");
                 else
-                    Console.WriteLine($"{i+1} - {CardsOnHands[i].name}, {CardsOnHands[i].suit}");
+                    Console.WriteLine($"{i + 1} - {CardsOnHands[i].Name}, {CardsOnHands[i].Suit}");
             }
         }
         internal int CardsToTake()
@@ -27,225 +30,117 @@ namespace Durak
             if (CardsOnHands.Count >= 6)
                 return 0;
             else
-             return i = 6 - CardsOnHands.Count;
-        }
-        internal void TakeCard(int i)
-        {
-            if (Card.Deck.Count > 0)
-            {
-                for (int j = 1; j <= i; j++)
-                {
-                    if (Card.Deck.Count > 0)
-                    {
-                        CardsOnHands.Add(Card.Deck[0]);
-                        Card.Deck.RemoveAt(0);
-                    }
-                }
-            }
+                return i = 6 - CardsOnHands.Count;
         }
 
-        internal Card ManAttack()
+
+        internal int ChooseMinRankCard(List<Card> SomeCards, bool WithTrump)
         {
-            #region Check input data
-            string Input = "";
-            int Enter = 0;
-            bool Continue = true;
-            Console.WriteLine($"Choose the card to attack!");
-            while (Continue)
+            if (WithTrump == false) //If false than choosen min between NON-trump cards
             {
-                Input = Console.ReadLine();
-                bool Cont = true;
-                while (Cont)
+                List<Card> temp = new List<Card>();
+                for (int i = 1; i <= SomeCards.Count; i++)
                 {
-                    try
-                    {
-                        int m = Convert.ToInt32(Input);
-                        Cont = false;
-                    }
-                    catch (Exception)
-                    {
-                        Console.WriteLine("You should enter a integer");
-                        Input = Console.ReadLine();
-                    }
+                    if (SomeCards[i - 1].Trump != true)
+                        temp.Add(SomeCards[i - 1]);
                 }
-                Enter = int.Parse(Input);
-                if (Enter > CardsOnHands.Count)
-                    Console.WriteLine($"Enter not bigger than {CardsOnHands.Count}");
-                else if (Enter <= 0)
-                    Console.WriteLine("Enter positive number");
+                if (temp.Count == 0)
+                {
+                    return 100;
+                }
                 else
-                    Continue = false;
-                #endregion
-            }
-            Table.CardsOnTable.Add(CardsOnHands[Enter-1]);
-            CardsOnHands.RemoveAt(Enter - 1);
-            return Table.CardsOnTable[Table.CardsOnTable.Count-1];
-        }
-
-        internal Card ManAttack(List<Card> PossibleAttackCards) //check if Player chosed right card to beat
-        {
-            #region Check input data
-            string Input = "";
-            int Enter = 0;
-            bool Continue = true;
-            Console.WriteLine($"Choose the card to attack or print 100 to skip!");
-            while (Continue)
-            {
-                Input = Console.ReadLine();
-                bool Cont = true;
-                while (Cont)
                 {
-                    try
-                    {
-                        int m = Convert.ToInt32(Input);
-                        Cont = false;
-                    }
-                    catch (Exception)
-                    {
-                        Console.WriteLine("You should enter a integer");
-                        Input = Console.ReadLine();
-                    }
-                }
-                Enter = int.Parse(Input);
-                if (Enter > CardsOnHands.Count && Enter != 100)
-                    Console.WriteLine($"Enter not bigger than {CardsOnHands.Count}");
-                else if (Enter == 100)
-                    Continue = false;
-                else if (Enter <= 0)
-                    Console.WriteLine("Enter positive number");
-                else // Enter == 0
-                { 
+                    int n = temp.Count - 1;
+                    int minCardRank = temp[n].Rank;
+                    int minIndex = n;
 
-                    int[] CardOnHandsIndex= new int[PossibleAttackCards.Count];
-                    for (int i = 0; i < PossibleAttackCards.Count; i++)
+                    while (n > 0)
                     {
-                        CardOnHandsIndex[i] = Card.CompareCards(CardsOnHands, PossibleAttackCards[i]);
-                    }
-                    foreach (int item in CardOnHandsIndex)
-                    {
-                        if (Enter == item + 1)
-                            Continue = false;
+                        if (minCardRank - temp[n - 1].Rank > 0)
+                        {
+                            minCardRank = temp[n - 1].Rank;
+                            minIndex = n - 1;
+                            n--;
+                        }
                         else
-                            Console.WriteLine($"You can't attack with ths Card");
+                        {
+                            n--;
+                        }
                     }
+                    return CompareCards(SomeCards, temp[minIndex]);
                 }
-                #endregion
             }
-            if (Enter != 100)
+
+            else //WithTrump == true
             {
-                Table.CardsOnTable.Add(CardsOnHands[Enter - 1]);
-                CardsOnHands.RemoveAt(Enter - 1);
-                return Table.CardsOnTable[Table.CardsOnTable.Count - 1];
+                List<Card> temp = new List<Card>();
+                for (int i = 1; i <= SomeCards.Count; i++)
+                {
+                    if (SomeCards[i - 1].Trump == true)
+                        temp.Add(SomeCards[i - 1]);
+                }
+                if (temp.Count == 0)
+                {
+                    return 100;
+                }
+                else
+                {
+                    int n = temp.Count - 1;
+                    int minCardRank = temp[n].Rank;
+                    int minIndex = n;
+
+                    while (n > 0)
+                    {
+                        if (minCardRank - temp[n - 1].Rank > 0)
+                        {
+                            minCardRank = temp[n - 1].Rank;
+                            minIndex = n - 1;
+                            n--;
+                        }
+                        else
+                        {
+                            n--;
+                        }
+                    }
+                    return CompareCards(SomeCards, temp[minIndex]);
+                }
             }
-            else
-                return null;
-            
         }
 
-        internal List<Card> IfCanAttack(List<Card> CardsOnTable) ///check the cards on table with the cards on hand
+        internal int CompareCards(List<Card> CardsOnHands, Card CardToCompare) //show index in Cards on hands with the compared card
+        {
+            int indexOfCard = 0;
+            for (int i = 0; i < CardsOnHands.Count; i++)
+            {
+                if (CardsOnHands[i].Suit == CardToCompare.Suit)
+                    if (CardsOnHands[i].Rank == CardToCompare.Rank)
+                        indexOfCard = i;
+            }
+            return indexOfCard;
+        }
+
+
+        internal virtual List<Card> IfCanAttack(List<Card> CardsOnTable) //check the cards on table with the cards on hand
         {
             List<Card> PossibleAttackCards = new List<Card>();
             if (CardsOnTable.Count == 0)
-                return CardsOnHands;
+                return null;
             else
             {
                 for (int i = 0; i <= CardsOnHands.Count - 1; i++)
                 {
-                    for (int j = 1; j <= Table.CardsOnTable.Count; j++)
+                    for (int j = 1; j <= CardsOnTable.Count; j++)
                     {
-                        if (CardsOnHands[i].rank == Table.CardsOnTable[j - 1].rank)
-                        {
+                        if (CardsOnHands[i].Rank == CardsOnTable[j - 1].Rank)
                             PossibleAttackCards.Add(CardsOnHands[i]);
-                        }
                     }
                 }
-                return PossibleAttackCards;
+                if (PossibleAttackCards.Count == 0)
+                    return null;
+                else
+                    return PossibleAttackCards;
             }
         }
-
-        internal bool ManDefense(Card attackCard)
-        { 
-            bool defSucces = false;
-            #region Check input
-            string Input = "";
-            int Enter = 0;
-            bool Continue = true;
-            Console.WriteLine($"Choose the card to defense!");
-            Console.WriteLine($"Choose 0 to take all cards on the table on hands");
-
-            while (Continue)
-            {
-                Input = Console.ReadLine();
-                bool Cont = true;
-                while (Cont)
-                {
-                    try
-                    {
-                        int m = Convert.ToInt32(Input);
-                        Cont = false;
-                    }
-                    catch (Exception)
-                    {
-                        Console.WriteLine("You should enter a integer");
-                        Input = Console.ReadLine();
-                    }
-                }
-                Enter = int.Parse(Input);
-                if (Enter > CardsOnHands.Count)
-                    Console.WriteLine($"Enter not bigger than {CardsOnHands.Count}");
-                else if (Enter < 0)
-                    Console.WriteLine("Enter positive number");
-                else if (Enter == 0)
-                {
-                    Console.WriteLine("You take all the cards from table!");
-                    defSucces = false;
-                    Continue = false;
-
-                }
-                else if (Enter != 0)
-                {
-                    if (attackCard.trump == false)
-                    {
-                        if (attackCard.suit != (CardsOnHands.ElementAt(Enter - 1)).suit)
-                        {
-                            if (CardsOnHands.ElementAt(Enter - 1).trump == true)
-                                {
-                                Table.CardsOnTable.Add(CardsOnHands[Enter - 1]);
-                                CardsOnHands.RemoveAt(Enter - 1);
-                                defSucces = true;
-                                Continue = false;
-                                }
-                            else
-                            Console.WriteLine("You can't defend with ths Card");
-                        }
-                        else if (attackCard.rank > (CardsOnHands.ElementAt(Enter - 1)).rank)
-                            Console.WriteLine("You can't defend with ths Card");
-                        else
-                        {
-                            Table.CardsOnTable.Add(CardsOnHands[Enter - 1]);
-                            CardsOnHands.RemoveAt(Enter - 1);
-                            defSucces = true;
-                            Continue = false;
-                        }
-                    }
-                    else // attackCard.trump == true
-                    {
-                        if (attackCard.suit != (CardsOnHands.ElementAt(Enter - 1)).suit)
-                            Console.WriteLine("You can't defend with ths Card");
-                        else if (attackCard.rank > (CardsOnHands.ElementAt(Enter - 1)).rank)
-                            Console.WriteLine("You can't defend with ths Card");
-                        else
-                        {
-                            Table.CardsOnTable.Add(CardsOnHands[Enter - 1]);
-                            CardsOnHands.RemoveAt(Enter - 1);
-                            defSucces = true;
-                            Continue = false;
-                        }
-                    }
-                }
-            }
-            return defSucces;
-#endregion
-        } 
     }
 }
+

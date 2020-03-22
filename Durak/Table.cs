@@ -8,9 +8,18 @@ namespace Durak
 {
     public class Table
     {
-        internal static List<Card> CardsOnTable = new List<Card>();
-       //internal static List<Card> CardsInTrash = new List<Card>();
+        internal List<Card> CardsOnTable = new List<Card>();
+
+        internal void ShowCards() 
+        {
+            foreach (Card i in CardsOnTable)
+                i.Show();
+        }
+
+        internal void AddCardsToTable(Card ActionCard)
+        {
+            CardsOnTable.Add(ActionCard);
+        }
+
     }
-
-
 }
