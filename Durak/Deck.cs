@@ -1,19 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using System.Configuration;
 using System.Threading.Tasks;
 
 namespace Durak
 {
-    internal class Deck
-    {
-        // TODO: protected
-        internal List<Card> _deckOfCards = new List<Card>(); 
-        //internal int DeckAmount = 36;
-        internal string[] Names = { "Six", "Seven", "Eight", "Nine", "Ten", "Jack", "Lady", "King", "Ace" };
-        internal string[] Suits = { "Diamonds", "Spades", "Clubs", "Hearts" };
 
+    internal class Deck
+    { 
+        private List<Card> _deckOfCards = new List<Card>();
+        internal string[] _names;
+        internal string[] _suits;
+
+        internal Deck (string names, string suits)
+        {
+         _names = names.Split(new string[] { "," }, StringSplitOptions.None);
+         _suits = suits.Split(new string[] { "," }, StringSplitOptions.None);
+        }
+        
         internal void CreateCard(int Rank, string Name, string Suit, bool Trump)
         {
             Card c = new Card(Rank, Name, Suit, Trump);
@@ -22,14 +27,14 @@ namespace Durak
 
         internal void CreateDeck(int Trump)
         {
-            foreach (string str in Suits)
+            foreach (string str in _suits)
             {
-                for (int i = 0, j = 0; i < Names.Count(); i++, j++)
+                for (int i = 0, j = 0; i < _names.Count(); i++, j++)
                 {
-                    if (str == Suits[Trump])
-                        CreateCard(i, Names[j], str, true);
+                    if (str == _suits[Trump])
+                        CreateCard(i, _names[j], str, true);
                     else
-                        CreateCard(i, Names[j], str, false);
+                        CreateCard(i, _names[j], str, false);
                 }
             }
         }
@@ -49,7 +54,7 @@ namespace Durak
                 {
                     if (_deckOfCards.Count > 0)
                     {
-                        T.CardsOnHands.Add(_deckOfCards[0]);
+                        T.AddCardToHands(_deckOfCards[0]);
                         _deckOfCards.RemoveAt(0);
                     }
                 }
@@ -69,5 +74,16 @@ namespace Durak
                 _deckOfCards[n] = value;
             }
         }
+
+        internal string ShowTrumpCard(int Trump)
+        {
+            return _suits[Trump].ToUpper();
+        }
+
+        internal int HowManyCardsInDeck()
+        {
+            return _deckOfCards.Count;
+        }
+
     }
 }

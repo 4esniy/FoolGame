@@ -6,53 +6,38 @@ using System.Threading.Tasks;
 
 namespace Durak
 {
-    class Card 
+    public class Card
     {
         /// <summary>
         /// Each card have 4 identifiers
         /// </summary>
-        private int _rank;
-        private string _name;
-        private string _suit;
-        private bool _trump;
+        //private int _rank;
+        //private string _name;
+        //private string _suit;
+        //private bool _trump;
 
         /// <summary>
         /// Set indentifier to a card instance
         /// </summary>
-        internal int Rank
-        {
-            get {return _rank; }
-        }
+        public int Rank { get ; }
+        public string Name { get; }
+        public string Suit { get; }
+        public bool Trump { get; }
 
-        internal string Name
+        public Card(int rank, string name, string suit, bool trump)
         {
-            get {return _name; }
-        }
-
-        internal string Suit
-        {
-            get {return _suit; }
-        }
-
-        internal bool Trump
-        {
-            get {return _trump; }
-        }
-
-        internal Card(int rank, string name, string suit, bool trump)
-        {
-            _rank = rank;
-            _name = name;
-            _suit = suit;
-            _trump = trump;
+            Rank = rank ;
+            Name = name ;
+            Suit = suit ;
+            Trump = trump;
         }
 
         internal void Show()
         {
-            if (_trump == true)
-                Console.WriteLine($"{_name}, {_suit.ToUpper()}");
+            if (Trump == true)
+                Console.WriteLine($"{Name}, {Suit.ToUpper()}");
             else
-                Console.WriteLine($"{_name}, {_suit}");
+                Console.WriteLine($"{Name}, {Suit}");
         }
 
     }

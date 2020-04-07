@@ -1,21 +1,59 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Configuration;
 
 namespace Durak
 {
-    abstract class Player
+    public class Player
     {
-        private const int _minCards = 6;
-        protected int MinCards { get {return _minCards;} }
-        //TODO: protected
-        internal List<Card> CardsOnHands = new List<Card>();
+        private string _playerName;
+        public string PlayerName { get { return _playerName;}}
+        private List<Card> CardsOnHands = new List<Card>();
+        private IStrategy _strategy;
+        private IMessages _message;
+        private IDefaultConstants _constant;
+        private int _minCards;
 
-        internal void ShowOnHands()
+
+        public Player(int languageType, string strategyType , string playerName)
         {
-            Console.WriteLine("You cards are:");
+            _playerName = playerName;
+            _message = new Messages(languageType);
+            _constant = new DefaultConstants(languageType);
+            _minCards = _constant.numberOfCards_1_;
+
+            string a = _constant.strategy_1_4_;
+            string b = _constant.strategy_1_4_;
+                
+
+            if (strategyType == a)
+                _strategy = new StrategyA(languageType);
+            else if (strategyType == b)
+                _strategy = new StrategyB(languageType);
+            else
+                _strategy = new HumanStrategy(languageType);
+
+        }
+
+        public Card Attack(List<Card> CardsOnTable)
+        {
+            return _strategy.Attack(CardsOnHands, CardsOnTable);
+
+        }
+
+        public Card Defend(List<Card> CardsOnTable, Card CardToBeat)
+        {
+            return _strategy.Defend(CardsOnTable, CardsOnHands, CardToBeat);
+        }
+
+        public void RemoveCardFromHads(Card CardToRemove)
+        {
+            CardsOnHands.Remove(CardToRemove);
+        }
+
+        public void ShowOnHands()
+        {
+            Console.WriteLine($"{_message.yourCardsAre_1_}"); //You cards are:
             for (int i = 0; i < CardsOnHands.Count; i++)
             {
                 if (CardsOnHands[i].Trump == true)
@@ -24,122 +62,24 @@ namespace Durak
                     Console.WriteLine($"{i + 1} - {CardsOnHands[i].Name}, {CardsOnHands[i].Suit}");
             }
         }
+
+        internal int HowManyCardsOnHands()
+        {
+            return CardsOnHands.Count;
+        }
+
+        internal void AddCardToHands(Card AnyCard)
+        {
+            CardsOnHands.Add(AnyCard);
+        }
+
         internal int CardsToTake()
         {
             int i = 0;
-            if (CardsOnHands.Count >= 6)
+            if (CardsOnHands.Count >= _minCards)
                 return 0;
             else
-                return i = 6 - CardsOnHands.Count;
-        }
-
-
-        internal int ChooseMinRankCard(List<Card> SomeCards, bool WithTrump)
-        {
-            if (WithTrump == false) //If false than choosen min between NON-trump cards
-            {
-                List<Card> temp = new List<Card>();
-                for (int i = 1; i <= SomeCards.Count; i++)
-                {
-                    if (SomeCards[i - 1].Trump != true)
-                        temp.Add(SomeCards[i - 1]);
-                }
-                if (temp.Count == 0)
-                {
-                    return 100;
-                }
-                else
-                {
-                    int n = temp.Count - 1;
-                    int minCardRank = temp[n].Rank;
-                    int minIndex = n;
-
-                    while (n > 0)
-                    {
-                        if (minCardRank - temp[n - 1].Rank > 0)
-                        {
-                            minCardRank = temp[n - 1].Rank;
-                            minIndex = n - 1;
-                            n--;
-                        }
-                        else
-                        {
-                            n--;
-                        }
-                    }
-                    return CompareCards(SomeCards, temp[minIndex]);
-                }
-            }
-
-            else //WithTrump == true
-            {
-                List<Card> temp = new List<Card>();
-                for (int i = 1; i <= SomeCards.Count; i++)
-                {
-                    if (SomeCards[i - 1].Trump == true)
-                        temp.Add(SomeCards[i - 1]);
-                }
-                if (temp.Count == 0)
-                {
-                    return 100;
-                }
-                else
-                {
-                    int n = temp.Count - 1;
-                    int minCardRank = temp[n].Rank;
-                    int minIndex = n;
-
-                    while (n > 0)
-                    {
-                        if (minCardRank - temp[n - 1].Rank > 0)
-                        {
-                            minCardRank = temp[n - 1].Rank;
-                            minIndex = n - 1;
-                            n--;
-                        }
-                        else
-                        {
-                            n--;
-                        }
-                    }
-                    return CompareCards(SomeCards, temp[minIndex]);
-                }
-            }
-        }
-
-        internal int CompareCards(List<Card> CardsOnHands, Card CardToCompare) //show index in Cards on hands with the compared card
-        {
-            int indexOfCard = 0;
-            for (int i = 0; i < CardsOnHands.Count; i++)
-            {
-                if (CardsOnHands[i].Suit == CardToCompare.Suit)
-                    if (CardsOnHands[i].Rank == CardToCompare.Rank)
-                        indexOfCard = i;
-            }
-            return indexOfCard;
-        }
-
-
-        internal virtual List<Card> IfCanAttack(List<Card> CardsOnTable) //check the cards on table with the cards on hand
-        {
-            List<Card> PossibleAttackCards = new List<Card>();
-            if (CardsOnTable.Count == 0)
-                return null;
-            else
-            {
-                for (int i = 0; i <= CardsOnHands.Count - 1; i++)
-                {
-                    for (int j = 1; j <= CardsOnTable.Count; j++)
-                    {
-                        if (CardsOnHands[i].Rank == CardsOnTable[j - 1].Rank)
-                            PossibleAttackCards.Add(CardsOnHands[i]);
-                    }
-                }
-                if (PossibleAttackCards.Count == 0)
-                    return null;
-                else
-                    return PossibleAttackCards;
-            }
+                return i = _minCards - CardsOnHands.Count;
         }
     }
 }
