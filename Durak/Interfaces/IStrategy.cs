@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Durak
+namespace Durak.Interfaces
 {
     public interface IStrategy
     {

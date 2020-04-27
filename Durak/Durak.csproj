@@ -112,6 +112,22 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CardAttributesConverter.cs" />
+    <Compile Include="DataBaseReader.cs" />
+    <Compile Include="Interfaces\IDataReader.cs" />
+    <Compile Include="ReaderFactory.cs" />
+    <Compile Include="Interfaces\IReaderFactory.cs" />
+    <Compile Include="Interfaces\ILanguageDataProvider.cs" />
+    <Compile Include="Interfaces\IPlayerSetter.cs" />
+    <Compile Include="LanguageDataProvider.cs" />
+    <Compile Include="PlayerSetter.cs" />
+    <Compile Include="ConfigurationSetter.cs" />
+    <Compile Include="DeckBuilder.cs" />
+    <Compile Include="GameStarter.cs" />
+    <Compile Include="Interfaces\IDeck.cs" />
+    <Compile Include="Interfaces\IDeckBuilder.cs" />
+    <Compile Include="Interfaces\IConfigurationSetter.cs" />
+    <Compile Include="Interfaces\ICardAttributesConverter.cs" />
     <Compile Include="TextClasses\Alerts.cs" />
     <Compile Include="TextClasses\DefaultConstants.cs" />
     <Compile Include="Interfaces\IDefaultConstants.cs" />
@@ -125,7 +141,6 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Include="TextClasses\ReadLanguageConfiguration.cs" />
     <Compile Include="Strategies\StrategyB.cs" />
     <Compile Include="Strategies\StrategyA.cs" />
     <Compile Include="Deck.cs" />
@@ -134,6 +149,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Table.cs" />
+    <Compile Include="XMLReader.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

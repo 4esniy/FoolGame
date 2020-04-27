@@ -1,17 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml;
-using System.IO;
-using System.Configuration;
-using System.Collections;
+using Durak.Interfaces;
 
-namespace Durak
+namespace Durak.TextClasses
 {
-    class Messages : IMessages
+    public class Messages : IMessages
     {
         public string yourCardsAre_1_ { get; }
         public string cardOnTableAre_2_ { get; }
@@ -48,47 +40,51 @@ namespace Durak
         public string cpuHasNoDefendCard_33_ { get; }
 
 
-
-        internal Messages (int languageType)
+        public Messages (ILanguageDataProvider languageConfiguration)
         {
+            try
+            {
+                yourCardsAre_1_ = languageConfiguration.GetTextFromConfiguration("yourCardsAre_1_");
+                cardOnTableAre_2_ = languageConfiguration.GetTextFromConfiguration("cardOnTableAre_2_");
+                chooseAttackCard_3_ = languageConfiguration.GetTextFromConfiguration("chooseAttackCard_3_");
+                youMayUseTheseCards_4_ = languageConfiguration.GetTextFromConfiguration("youMayUseTheseCards_4_");
+                youCannotUseCard_5_ = languageConfiguration.GetTextFromConfiguration("youCannotUseCard_5_");
+                haveNoCardsToAttack_6_ = languageConfiguration.GetTextFromConfiguration("haveNoCardsToAttack_6_");
+                chooseDefendCard_7_ = languageConfiguration.GetTextFromConfiguration("chooseDefendCard_7_");
+                chooseToTakeAllCards_8_ = languageConfiguration.GetTextFromConfiguration("chooseToTakeAllCards_8_");
+                youTakeAllCards_9_ = languageConfiguration.GetTextFromConfiguration("youTakeAllCards_9_");
+                haveNoCardsToDefend_10_ = languageConfiguration.GetTextFromConfiguration("haveNoCardsToDefend_10_");
+                welcome_11_ = languageConfiguration.GetTextFromConfiguration("welcome_11_");
+                enterName_12_ = languageConfiguration.GetTextFromConfiguration("enterName_12_");
+                hello_13_ = languageConfiguration.GetTextFromConfiguration("hello_13_");
+                enterCpuStrategy_14_ = languageConfiguration.GetTextFromConfiguration("enterCpuStrategy_14_");
+                firstVar_15_ = languageConfiguration.GetTextFromConfiguration("firstVar_15_");
+                secondVar_16_ = languageConfiguration.GetTextFromConfiguration("secondVar_16_");
+                trumpCardIs_17_ = languageConfiguration.GetTextFromConfiguration("trumpCardIs_17_");
+                yourTurn_18_ = languageConfiguration.GetTextFromConfiguration("yourTurn_18_");
+                thereIs_19_ = languageConfiguration.GetTextFromConfiguration("thereIs_19_");
+                cardsInCpuHands_20_ = languageConfiguration.GetTextFromConfiguration("cardsInCpuHands_20_");
+                cardsInDeck_21_ = languageConfiguration.GetTextFromConfiguration("cardsInDeck_21_");
+                turnChanges_22_ = languageConfiguration.GetTextFromConfiguration("turnChanges_22_");
+                cpuTurn_23_ = languageConfiguration.GetTextFromConfiguration("cpuTurn_23_");
+                drawThisTime_24_ = languageConfiguration.GetTextFromConfiguration("drawThisTime_24_");
+                congratulations_25_ = languageConfiguration.GetTextFromConfiguration("congratulations_25_");
+                youAreWinner_26_ = languageConfiguration.GetTextFromConfiguration("youAreWinner_26_");
+                youLoseThisGame_27_ = languageConfiguration.GetTextFromConfiguration("youLoseThisGame_27_");
+                press_28_ = languageConfiguration.GetTextFromConfiguration("press_28_");
+                toStartAgain_29_ = languageConfiguration.GetTextFromConfiguration("toStartAgain_29_");
+                cpuHasNoAttackCard_30_ = languageConfiguration.GetTextFromConfiguration("cpuHasNoAttackCard_30_");
+                cpuAttackedYouWith_31_ = languageConfiguration.GetTextFromConfiguration("cpuAttackedYouWith_31_");
+                cpuBeatWith_32_ = languageConfiguration.GetTextFromConfiguration("cpuBeatWith_32_");
+                cpuHasNoDefendCard_33_ = languageConfiguration.GetTextFromConfiguration("cpuHasNoDefendCard_33_");
 
-            ReadLanguageConfiguration Configuration = new ReadLanguageConfiguration(languageType);
-
-            yourCardsAre_1_ = Configuration.GetTextFromConfiguration("yourCardsAre_1_");
-            cardOnTableAre_2_  = Configuration.GetTextFromConfiguration("cardOnTableAre_2_");
-            chooseAttackCard_3_ = Configuration.GetTextFromConfiguration("chooseAttackCard_3_");
-            youMayUseTheseCards_4_ = Configuration.GetTextFromConfiguration("youMayUseTheseCards_4_");
-            youCannotUseCard_5_ = Configuration.GetTextFromConfiguration("youCannotUseCard_5_");
-            haveNoCardsToAttack_6_ = Configuration.GetTextFromConfiguration("haveNoCardsToAttack_6_");
-            chooseDefendCard_7_ = Configuration.GetTextFromConfiguration("chooseDefendCard_7_");
-            chooseToTakeAllCards_8_ = Configuration.GetTextFromConfiguration("chooseToTakeAllCards_8_");
-            youTakeAllCards_9_ = Configuration.GetTextFromConfiguration("youTakeAllCards_9_");
-            haveNoCardsToDefend_10_ = Configuration.GetTextFromConfiguration("haveNoCardsToDefend_10_");
-            welcome_11_ = Configuration.GetTextFromConfiguration("welcome_11_");
-            enterName_12_ = Configuration.GetTextFromConfiguration("enterName_12_");
-            hello_13_ = Configuration.GetTextFromConfiguration("hello_13_");
-            enterCpuStrategy_14_ = Configuration.GetTextFromConfiguration("enterCpuStrategy_14_");
-            firstVar_15_ = Configuration.GetTextFromConfiguration("firstVar_15_");
-            secondVar_16_ = Configuration.GetTextFromConfiguration("secondVar_16_");
-            trumpCardIs_17_ = Configuration.GetTextFromConfiguration("trumpCardIs_17_");
-            yourTurn_18_ = Configuration.GetTextFromConfiguration("yourTurn_18_");
-            thereIs_19_ = Configuration.GetTextFromConfiguration("thereIs_19_");
-            cardsInCpuHands_20_ = Configuration.GetTextFromConfiguration("cardsInCpuHands_20_");
-            cardsInDeck_21_ = Configuration.GetTextFromConfiguration("cardsInDeck_21_");
-            turnChanges_22_ = Configuration.GetTextFromConfiguration("turnChanges_22_");
-            cpuTurn_23_ = Configuration.GetTextFromConfiguration("cpuTurn_23_");
-            drawThisTime_24_ = Configuration.GetTextFromConfiguration("drawThisTime_24_");
-            congratulations_25_ = Configuration.GetTextFromConfiguration("congratulations_25_");
-            youAreWinner_26_ = Configuration.GetTextFromConfiguration("youAreWinner_26_");
-            youLoseThisGame_27_ = Configuration.GetTextFromConfiguration("youLoseThisGame_27_");
-            press_28_ = Configuration.GetTextFromConfiguration("press_28_");
-            toStartAgain_29_ = Configuration.GetTextFromConfiguration("toStartAgain_29_");
-            cpuHasNoAttackCard_30_ = Configuration.GetTextFromConfiguration("cpuHasNoAttackCard_30_");
-            cpuAttackedYouWith_31_ = Configuration.GetTextFromConfiguration("cpuAttackedYouWith_31_");
-            cpuBeatWith_32_ = Configuration.GetTextFromConfiguration("cpuBeatWith_32_");
-            cpuHasNoDefendCard_33_ = Configuration.GetTextFromConfiguration("cpuHasNoDefendCard_33_");
-
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"{nameof(Messages)}received empty parameters. {e.Message} {e.StackTrace}");
+                Console.ReadKey();
+                Environment.Exit(0);
+            }
         }
-
     }
 }

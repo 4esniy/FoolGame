@@ -1,19 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Configuration;
-
-namespace Durak
+﻿namespace Durak
 {
     class Program
     {
 
         static void Main(string[] args)
         {
-            //setConfigFileAtRuntime(args);
-            Table GameTable = new Table();
-            GameTable.RunTheGame();
-            
+            GameStarter game = new GameStarter();
         }
 
     }

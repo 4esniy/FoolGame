@@ -1,15 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml;
-using System.Configuration;
-using System.Collections;
+using Durak.Interfaces;
 
-namespace Durak
+namespace Durak.TextClasses
 {
-    class Alerts : IAlerts
+    public class Alerts : IAlerts
     {
         public string enterInteger_1_ { get ;}
         public string enterNotBiggerThan_2_ { get; }
@@ -18,17 +12,23 @@ namespace Durak
         public string userNameNotEmpty_5_ { get; }
         public string noSuchStrategy_6_ { get; }
 
-        internal Alerts(int languageType)
+        public Alerts(ILanguageDataProvider languageConfiguration)
         {
-            ReadLanguageConfiguration Configuration = new ReadLanguageConfiguration(languageType);
-
-            enterInteger_1_ = Configuration.GetTextFromConfiguration("enterInteger_1_");
-            enterNotBiggerThan_2_ = Configuration.GetTextFromConfiguration("enterNotBiggerThan_2_");
-            enterPositiveNumber_3_ = Configuration.GetTextFromConfiguration("enterPositiveNumber_3_");
-            enterNotLessThan10_4_ = Configuration.GetTextFromConfiguration("enterNotLessThan10_4_");
-            userNameNotEmpty_5_ = Configuration.GetTextFromConfiguration("userNameNotEmpty_5_");
-            noSuchStrategy_6_ = Configuration.GetTextFromConfiguration("noSuchStrategy_6_");
-
+            try
+            {
+                enterInteger_1_ = languageConfiguration.GetTextFromConfiguration("enterInteger_1_");
+                enterNotBiggerThan_2_ = languageConfiguration.GetTextFromConfiguration("enterNotBiggerThan_2_");
+                enterPositiveNumber_3_ = languageConfiguration.GetTextFromConfiguration("enterPositiveNumber_3_");
+                enterNotLessThan10_4_ = languageConfiguration.GetTextFromConfiguration("enterNotLessThan10_4_");
+                userNameNotEmpty_5_ = languageConfiguration.GetTextFromConfiguration("userNameNotEmpty_5_");
+                noSuchStrategy_6_ = languageConfiguration.GetTextFromConfiguration("noSuchStrategy_6_");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"{nameof(Alerts)}received empty parameters. {e.Message}");
+                Console.ReadKey();
+                Environment.Exit(0);
+            }
         }
     }
 }

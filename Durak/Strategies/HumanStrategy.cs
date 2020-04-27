@@ -1,23 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
+using Durak.Interfaces;
+using Durak.Properties;
 
-namespace Durak
+namespace Durak.Strategies
 {
     public class HumanStrategy : IStrategy
     {
         private IMessages _message;
         private IAlerts _alert;
 
-        public HumanStrategy(int languageType)
+        internal HumanStrategy(IConfigurationSetter configuration)
         {
-            _message = new Messages(languageType);
-            _alert = new Alerts(languageType);
+            try
+            {
+                _message = configuration.Message;
+                _alert = configuration.Alert;
+            }
+            catch (NullReferenceException e)
+            {
+                Console.WriteLine($"{nameof(HumanStrategy)}received empty parameters. {e.Message}");
+                Console.ReadKey();
+                Environment.Exit(0);
+            }
+
         }
-         
-        
+
         //check if Player chosed right card to beat CardsOnHands or PossibleAttackCards
-        public Card Attack(List<Card> CardsOnHands, List<Card> CardsOnTable) 
+        public Card Attack(List<Card> CardsOnHands, List<Card> CardsOnTable)
         {
             string Input = null;
             int Enter = 0;
@@ -37,7 +47,7 @@ namespace Durak
 
             if (possibleAttackCards.Count != 0)
             {
-                if (CardsOnTable.Count !=0)
+                if (CardsOnTable.Count != 0)
                 {
                     Console.WriteLine($"{_message.youMayUseTheseCards_4_}");  // You may use these card(s):  
                     foreach (Card i in possibleAttackCards)
@@ -48,7 +58,7 @@ namespace Durak
                             Console.WriteLine($"{i.Name} , {(i.Suit).ToUpper()}");
                     }
                 }
-                
+
                 Card Temp = null;
                 while (Continue)
                 {
@@ -96,11 +106,11 @@ namespace Durak
                 Console.ReadKey();
                 return null;
             }
-                
+
 
         }
 
-        public Card Defend( List<Card> CardsOnTable, List<Card> CardsOnHands, Card CardToBeat)
+        public Card Defend(List<Card> CardsOnTable, List<Card> CardsOnHands, Card CardToBeat)
         {
             Card defCard = null;
             string Input = "";
@@ -141,7 +151,7 @@ namespace Durak
                                 defCard = CardsOnHands[Enter - 1];
                         }
 
-                        if (defCard!= null)
+                        if (defCard != null)
                             Continue = false;
                         else
                             Console.WriteLine($"{_message.youCannotUseCard_5_}"); //You can not use this card
@@ -165,7 +175,7 @@ namespace Durak
                 Console.ReadKey();
                 return null;
             }
-                
+
         }
 
         public List<Card> PossibleAttackCards(List<Card> CardsOnHands, List<Card> CardsOnTable) ///check the cards on table with the cards on hand

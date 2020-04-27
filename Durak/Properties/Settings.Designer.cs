@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Durak.Properties {
+namespace Durak.Properties.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]

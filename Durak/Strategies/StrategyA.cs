@@ -1,19 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Configuration;
+using Durak.Interfaces;
+using Durak.Properties;
 
-namespace Durak
+namespace Durak.Strategies
 {
     public class StrategyA : IStrategy
     {
         private IMessages _message;
 
-        internal StrategyA(int languageType)
+        internal StrategyA(IConfigurationSetter configuration)
         {
-            _message = new Messages(languageType);
+            try
+            {
+                _message = configuration.Message;
+            }
+            catch (NullReferenceException e)
+            {
+                Console.WriteLine($"{nameof(StrategyA)}received empty parameters. {e.Message}");
+                Console.ReadKey();
+                Environment.Exit(0);
+            }
 
         }
 
@@ -40,7 +47,7 @@ namespace Durak
                 Console.ReadKey();
                 return null;
             }
-               
+
 
             if (minCardNonTrump == null) // null -  there are no NonTrump cards in possibleAttack cards
             {
@@ -88,15 +95,15 @@ namespace Durak
         public List<Card> PossibleAttackCards(List<Card> CardsOnHands, List<Card> CardsOnTable) //check the cards on table with the cards on hand
         {
             List<Card> possibleAttackCards = new List<Card>();
-                for (int i = 0; i <= CardsOnHands.Count - 1; i++)
+            for (int i = 0; i <= CardsOnHands.Count - 1; i++)
+            {
+                for (int j = 1; j <= CardsOnTable.Count; j++)
                 {
-                    for (int j = 1; j <= CardsOnTable.Count; j++)
-                    {
-                        if (CardsOnHands[i].Rank == CardsOnTable[j - 1].Rank)
+                    if (CardsOnHands[i].Rank == CardsOnTable[j - 1].Rank)
                         possibleAttackCards.Add(CardsOnHands[i]);
-                    }
                 }
-                    return possibleAttackCards;
+            }
+            return possibleAttackCards;
         }
 
         public List<Card> PossibleDefendCards(List<Card> CardsOnHands, Card CardToBeat) ///check the cards on table with the cards on hand
@@ -148,7 +155,7 @@ namespace Durak
                     if (MinCardRank - temp[n - 1].Rank > 0)
                     {
                         MinCardRank = temp[n - 1].Rank;
-                        indexMinCardRank=n-1;
+                        indexMinCardRank = n - 1;
                         n--;
                     }
                     else
@@ -157,7 +164,7 @@ namespace Durak
                     }
                 }
 
-                return minRankCard=temp[indexMinCardRank];
+                return minRankCard = temp[indexMinCardRank];
             }
             else
                 return null;

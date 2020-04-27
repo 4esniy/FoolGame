@@ -1,20 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Configuration;
+using Durak.Interfaces;
+using Durak.Properties;
 
-namespace Durak
+namespace Durak.Strategies
 {
     public class StrategyB : IStrategy
     {
         private IMessages _message;
 
-        internal StrategyB(int languageType)
+        internal StrategyB(IConfigurationSetter configuration)
         {
-            _message = new Messages(languageType);
-
+            try
+            {
+                _message = configuration.Message;
+            }
+            catch (NullReferenceException e)
+            {
+                Console.WriteLine($"{nameof(StrategyB)}received empty parameters. {e.Message}");
+                Console.ReadKey();
+                Environment.Exit(0);
+            }
         }
 
         public Card Attack(List<Card> CardsOnHands, List<Card> CardsOnTable)

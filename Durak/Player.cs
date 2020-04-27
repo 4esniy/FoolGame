@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
+using Durak.Interfaces;
+using Durak.Properties;
 
 namespace Durak
 {
     public class Player
     {
-        private string _playerName;
-        public string PlayerName { get { return _playerName;}}
         private List<Card> CardsOnHands = new List<Card>();
         private IStrategy _strategy;
         private IMessages _message;
@@ -15,24 +14,21 @@ namespace Durak
         private int _minCards;
 
 
-        public Player(int languageType, string strategyType , string playerName)
+        internal Player(IConfigurationSetter configuration, IStrategy strategy)
         {
-            _playerName = playerName;
-            _message = new Messages(languageType);
-            _constant = new DefaultConstants(languageType);
-            _minCards = _constant.numberOfCards_1_;
-
-            string a = _constant.strategy_1_4_;
-            string b = _constant.strategy_1_4_;
-                
-
-            if (strategyType == a)
-                _strategy = new StrategyA(languageType);
-            else if (strategyType == b)
-                _strategy = new StrategyB(languageType);
-            else
-                _strategy = new HumanStrategy(languageType);
-
+            try
+            {
+                _strategy = strategy;
+                _message = configuration.Message;
+                _constant = configuration.Constant;
+                _minCards = _constant.numberOfCards_1_;
+            }
+            catch (NullReferenceException e)
+            {
+                Console.WriteLine($"{nameof(Player)}received empty parameters. {e.Message}");
+                Console.ReadKey();
+                Environment.Exit(0);
+            }
         }
 
         public Card Attack(List<Card> CardsOnTable)
@@ -46,7 +42,7 @@ namespace Durak
             return _strategy.Defend(CardsOnTable, CardsOnHands, CardToBeat);
         }
 
-        public void RemoveCardFromHads(Card CardToRemove)
+        public void RemoveCardFromHands(Card CardToRemove)
         {
             CardsOnHands.Remove(CardToRemove);
         }

@@ -1,53 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Configuration;
-using System.Threading.Tasks;
+using Durak.Interfaces;
+using Durak.Properties;
 
 namespace Durak
 {
+    public class Deck : IDeck
+    {
+        public List<Card> _deckOfCards {get; }
 
-    internal class Deck
-    { 
-        private List<Card> _deckOfCards = new List<Card>();
-        internal string[] _names;
-        internal string[] _suits;
-
-        internal Deck (string names, string suits)
+        public Deck(IDeckBuilder deckBuilder)
         {
-         _names = names.Split(new string[] { "," }, StringSplitOptions.None);
-         _suits = suits.Split(new string[] { "," }, StringSplitOptions.None);
-        }
-        
-        internal void CreateCard(int Rank, string Name, string Suit, bool Trump)
-        {
-            Card c = new Card(Rank, Name, Suit, Trump);
-            _deckOfCards.Add(c);
-        }
-
-        internal void CreateDeck(int Trump)
-        {
-            foreach (string str in _suits)
+            try
             {
-                for (int i = 0, j = 0; i < _names.Count(); i++, j++)
-                {
-                    if (str == _suits[Trump])
-                        CreateCard(i, _names[j], str, true);
-                    else
-                        CreateCard(i, _names[j], str, false);
-                }
+                _deckOfCards = deckBuilder.CreateDeck();
+            }
+            catch (NullReferenceException e)
+            {
+                Console.WriteLine($"Received value of {nameof(Deck)} is empty {e.Message}");
+                Console.ReadKey();
+                Environment.Exit(0);
             }
         }
 
-        internal void ShowCards() //Just to check that cards are created
+        public void GiveCardFromDeck(int i, Player T)
         {
-            foreach (Card i in _deckOfCards)
-                i.Show();
-        }
 
-
-        internal void GiveCardFromDeck(int i, Player T)
-        {
             if (_deckOfCards.Count > 0)
             {
                 for (int j = 1; j <= i; j++)
@@ -61,26 +39,21 @@ namespace Durak
             }
         }
 
-        internal void ShuffleDeck()
+        public string ShowTrumpCard()
         {
-            Random rnd = new Random();
-            int n = _deckOfCards.Count;
-            while (n > 1)
-            {
-                n--;
-                int k = rnd.Next(n);
-                Card value = _deckOfCards[k];
-                _deckOfCards[k] = _deckOfCards[n];
-                _deckOfCards[n] = value;
-            }
+            
+            string temp=null;
+            foreach (Card i in _deckOfCards)
+                if (i.Trump)
+                {
+                    temp = i.Suit;
+                    break;
+                }
+            
+            return temp;
         }
 
-        internal string ShowTrumpCard(int Trump)
-        {
-            return _suits[Trump].ToUpper();
-        }
-
-        internal int HowManyCardsInDeck()
+        public int HowManyCardsInDeck()
         {
             return _deckOfCards.Count;
         }

@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Durak
+﻿namespace Durak.Interfaces
 {
-    interface IAlerts
+    public interface IAlerts
     {
         string enterInteger_1_ { get; }
         string enterNotBiggerThan_2_ { get; }

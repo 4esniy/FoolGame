@@ -1,23 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Durak
 {
     public class Card
     {
         /// <summary>
-        /// Each card have 4 identifiers
-        /// </summary>
-        //private int _rank;
-        //private string _name;
-        //private string _suit;
-        //private bool _trump;
-
-        /// <summary>
-        /// Set indentifier to a card instance
+        /// Set identifier to a card instance
         /// </summary>
         public int Rank { get ; }
         public string Name { get; }
@@ -26,18 +14,26 @@ namespace Durak
 
         public Card(int rank, string name, string suit, bool trump)
         {
-            Rank = rank ;
-            Name = name ;
-            Suit = suit ;
-            Trump = trump;
+            try
+            {
+                Rank = rank;
+                if (name == null || suit == null)
+                    throw new ArgumentNullException(nameof(Card), "Unable to create Card");
+                Name = name;
+                Suit = suit;
+                Trump = trump;
+            }
+            catch (ArgumentNullException e)
+            {
+                Console.WriteLine(e.Message);
+                Console.ReadKey();
+                Environment.Exit(0);
+            }
         }
 
-        internal void Show()
+        public void Show()
         {
-            if (Trump == true)
-                Console.WriteLine($"{Name}, {Suit.ToUpper()}");
-            else
-                Console.WriteLine($"{Name}, {Suit}");
+            Console.WriteLine(Trump? $"{Name}, {Suit.ToUpper()}" : $"{Name}, {Suit}");
         }
 
     }
