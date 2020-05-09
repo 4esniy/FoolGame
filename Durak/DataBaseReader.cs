@@ -9,19 +9,21 @@ using Durak.Interfaces;
 
 namespace Durak
 {
-    class DataBaseReader : IDataReader
+    public class DataBaseReader : IDataReader
     {
-        private readonly int _languageType;
-        private Dictionary<string, string> _textCollection = new Dictionary<string, string>();
+        public int _languageType { get; }
+        private Dictionary<string, string> _textCollection;
 
         public DataBaseReader(int languageType)
         {
             _languageType = languageType;
         }
 
+
         public Dictionary<string, string> Read()
         {
             string connectionString = ConfigurationManager.ConnectionStrings["Language_config"].ConnectionString;
+            var textCollection = new Dictionary<string, string>();
             using (SqlConnection con = new SqlConnection(connectionString))
             {
                 SqlCommand command = null;
@@ -42,12 +44,11 @@ namespace Durak
                 {
                     while (reader.Read())
                     {
-                        _textCollection.Add((string)reader["key_word"], (string)reader["text_value"]);
+                        textCollection.Add((string)reader["key_word"], (string)reader["text_value"]);
                     }
                 }
-                Console.WriteLine(_textCollection.Count());
             }
-            return _textCollection;
+            return _textCollection = textCollection;
         }
     }
 }

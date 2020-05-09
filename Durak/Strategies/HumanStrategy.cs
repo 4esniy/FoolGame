@@ -10,7 +10,7 @@ namespace Durak.Strategies
         private IMessages _message;
         private IAlerts _alert;
 
-        internal HumanStrategy(IConfigurationSetter configuration)
+        public HumanStrategy(IConfigurationSetter configuration)
         {
             try
             {

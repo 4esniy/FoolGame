@@ -13,20 +13,18 @@ namespace Durak.TextClasses
 
         public DefaultConstants(ILanguageDataProvider languageConfiguration)
         {
-            try
+            if (languageConfiguration != null)
             {
-                int.TryParse(languageConfiguration.GetTextFromConfiguration("numberOfCards_1_"), out int numberOfCards);
-                numberOfCards_1_ = numberOfCards;
                 strategy_1_4_ = languageConfiguration.GetTextFromConfiguration("strategy_1_4_");
                 strategy_2_5_ = languageConfiguration.GetTextFromConfiguration("strategy_2_5_");
                 strategy_Human_6_ = languageConfiguration.GetTextFromConfiguration("strategy_Human_6_");
                 WantToContinue_7_ = languageConfiguration.GetTextFromConfiguration("WantToContinue_7_");
+                int.TryParse(languageConfiguration.GetTextFromConfiguration("numberOfCards_1_"), out int numberOfCards);
+                numberOfCards_1_ = numberOfCards;
             }
-            catch (Exception e)
+            else
             {
-                Console.WriteLine($"{nameof(DefaultConstants)}: received empty parameters{e.Message}");
-                Console.ReadKey();
-                Environment.Exit(0);
+                throw new ArgumentNullException(nameof(DefaultConstants));
             }
         }
 

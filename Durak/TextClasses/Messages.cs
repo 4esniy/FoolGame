@@ -42,7 +42,7 @@ namespace Durak.TextClasses
 
         public Messages (ILanguageDataProvider languageConfiguration)
         {
-            try
+            if (languageConfiguration != null)
             {
                 yourCardsAre_1_ = languageConfiguration.GetTextFromConfiguration("yourCardsAre_1_");
                 cardOnTableAre_2_ = languageConfiguration.GetTextFromConfiguration("cardOnTableAre_2_");
@@ -77,13 +77,10 @@ namespace Durak.TextClasses
                 cpuAttackedYouWith_31_ = languageConfiguration.GetTextFromConfiguration("cpuAttackedYouWith_31_");
                 cpuBeatWith_32_ = languageConfiguration.GetTextFromConfiguration("cpuBeatWith_32_");
                 cpuHasNoDefendCard_33_ = languageConfiguration.GetTextFromConfiguration("cpuHasNoDefendCard_33_");
-
             }
-            catch (Exception e)
+            else
             {
-                Console.WriteLine($"{nameof(Messages)}received empty parameters. {e.Message} {e.StackTrace}");
-                Console.ReadKey();
-                Environment.Exit(0);
+                throw new ArgumentNullException(nameof(Messages));
             }
         }
     }

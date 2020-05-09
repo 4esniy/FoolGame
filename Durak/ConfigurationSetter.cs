@@ -1,50 +1,56 @@
 ﻿using System;
 using System.Configuration;
+using System.Runtime.CompilerServices;
 using Durak.Interfaces;
 using Durak.Properties;
 using Durak.TextClasses;
 
 namespace Durak
 {
-    class ConfigurationSetter : IConfigurationSetter
+    public class ConfigurationSetter : IConfigurationSetter
     {
-        private IReaderFactory ReaderFactory{ get; }
-        private ILanguageDataProvider LanguageConfiguration { get; }
+        public IReaderFactory ReaderFactory { get; }
+        public ILanguageDataProvider LanguageConfiguration { get; }
         public IMessages Message { get; }
         public IAlerts Alert { get; }
         public IDefaultConstants Constant { get; }
         public ICardAttributesConverter CardAttributes { get; }
+        public string _message { get; }
+        public int _languageType { get; }
 
-        // these messages are default
-        string message = ConfigurationManager.AppSettings["Message"];
-
-        internal ConfigurationSetter()
+        public ConfigurationSetter(IManualInputProvider manualInputProvider)
         {
-            int languageType = 0;
+            _message = manualInputProvider.message;
+            _languageType = manualInputProvider.ReturnLanguageTypeInputValue();
 
-            #region Check the input
+            ReaderFactory = new ReaderFactory(_languageType);
 
-            while (true)
+            try
             {
-                Console.WriteLine($"{message}"); //Choose language and press Enter: 1- English, 2 - Русский
-                string input = Console.ReadLine();
-                int.TryParse(input, out languageType);
-
-                if (languageType != 1 && languageType != 2)
-                {
-                    Console.WriteLine($"Input violation. {message}");
-                }
-                else break;
-                #endregion
+                LanguageConfiguration = new LanguageDataProvider(ReaderFactory);
+            }
+            catch (Exception e)
+            {
+                //log
+                Console.WriteLine(e.StackTrace);
+                Console.ReadKey();
+                Environment.Exit(0);
             }
 
-            ReaderFactory = new ReaderFactory(languageType);
-            LanguageConfiguration = new LanguageDataProvider(ReaderFactory);
-            Message = new Messages(LanguageConfiguration);
-            Alert = new Alerts(LanguageConfiguration);
-            Constant = new DefaultConstants(LanguageConfiguration);
-            CardAttributes = new CardAttributesConverter(LanguageConfiguration);
-
+            try
+            {
+                Message = new Messages(LanguageConfiguration);
+                Alert = new Alerts(LanguageConfiguration);
+                Constant = new DefaultConstants(LanguageConfiguration);
+                CardAttributes = new CardAttributesConverter(LanguageConfiguration);
+            }
+            catch (Exception e)
+            {
+                //log
+                Console.WriteLine(e.StackTrace);
+                Console.ReadKey();
+                Environment.Exit(0);
+            }
         }
     }
 }

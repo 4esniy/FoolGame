@@ -1,78 +1,48 @@
-﻿using System;
-using Durak.Interfaces;
-using Durak.Properties;
-using Durak.Strategies;
+﻿using Durak.Interfaces;
+using System;
+using Serilog;
 
 namespace Durak
 {
-    class PlayerSetter : IPlayerSetter
+    public class PlayerSetter : IPlayerSetter
     {
-        public Player player1 { get; }
-        public Player player2 { get; }
-        public string UserName { get; }
-        private IConfigurationSetter _configuration;
+        public Player player1 => _player1;
+        private Player _player1 { get; set; }
+        public Player player2 => _player2;
+        private Player _player2 { get; set; }
+        public string UserName => _userName;
+        private string _userName { get; set; }
+        public IConfigurationSetter Configuration { get; }
+        public IPlayerFactory PlayerFactory { get; }
+        public IStrategyFactory StrategyFactory { get; }
+        public ISecondaryInputProvider InputProvider { get; }
 
-        public PlayerSetter(IConfigurationSetter configuration)
+
+        public PlayerSetter(IConfigurationSetter configuration, IPlayerFactory playerFactory, IStrategyFactory strategyFactory, ISecondaryInputProvider inputProvider)
         {
-            try
-            {
-                _configuration = configuration;
-            }
-            catch (NullReferenceException e)
-            {
-                Console.WriteLine($"{nameof(PlayerSetter)}received empty parameters. {e.Message}");
-                Console.ReadKey();
-                Environment.Exit(0);
-            }
+            if (configuration == null || playerFactory == null || strategyFactory == null || inputProvider== null)
+                throw new NullReferenceException(nameof(PlayerSetter));
 
-            bool flag1 = true;
-            bool flag2 = true;
-            IStrategy player1_strategy = new HumanStrategy(_configuration);
-            player1 = new Player(_configuration, player1_strategy);
-            string CPUstrategyType = null;
-
-            while (flag1)
-            {
-                if (UserName == null)
-                {
-                    Console.WriteLine($"{_configuration.Message.enterName_12_}"); //Enter YOUR name and press Enter button:
-                    UserName = Convert.ToString(Console.ReadLine());
-                    if (UserName.Length > 10)
-                        Console.WriteLine($"{_configuration.Alert.enterNotLessThan10_4_}"); //Enter not less than 10 characters
-                    else if (string.IsNullOrWhiteSpace(UserName))
-                        Console.WriteLine($"{_configuration.Alert.userNameNotEmpty_5_}"); //User name can not be empty
-                    else
-                        flag1 = false;
-                }
-                else
-                    flag1 = false;
-
-            }
-
-            while (flag2)
-            {
-                Console.WriteLine($"{_configuration.Message.enterCpuStrategy_14_}"); //Enter Computer strategy type and press Enter button:
-                Console.WriteLine($"{_configuration.Constant.strategy_1_4_} - {_configuration.Message.firstVar_15_}"); //First Variant
-                Console.WriteLine($"{_configuration.Constant.strategy_2_5_} - {_configuration.Message.secondVar_16_}"); //Second Variant
-                CPUstrategyType = (Convert.ToString(Console.ReadLine())).ToUpper();
-                if (CPUstrategyType.Length > 1 || string.IsNullOrWhiteSpace(CPUstrategyType))
-                    Console.WriteLine($"{_configuration.Alert.noSuchStrategy_6_}"); //There is no such strategy
-                else if (CPUstrategyType.Equals(_configuration.Constant.strategy_1_4_))
-                    flag2 = false;
-                else if (CPUstrategyType.Equals(_configuration.Constant.strategy_2_5_))
-                    flag2 = false;
-            }
-
-            if (CPUstrategyType == _configuration.Message.firstVar_15_)
-            {
-                IStrategy player2_strategy = new StrategyA(configuration);
-                player2 = new Player(_configuration, player2_strategy);
-            }
-            else
-            {
-                IStrategy player2_strategy = new StrategyB(configuration);
-                player2 = new Player(_configuration, player2_strategy);
-            }
+            Configuration = configuration;
+            PlayerFactory = playerFactory;
+            StrategyFactory = strategyFactory;
+            InputProvider = inputProvider;
         }
+
+        public void CreatePlayers()
+        {
+            _player1 = PlayerFactory.CreatePlayer(StrategyFactory.CreateHumanStrategy());
+            _userName = InputProvider.ReturnUserNameInputValue();
+            Log.Information($"Created Player {_player1}, name is {_userName}, in {nameof(CreatePlayers)}");
+
+            string cpuStrategyType = InputProvider.ReturnStrategyTypeInputValue();
+            Log.Information($"Made manual choose. Chosen {cpuStrategyType} type");
+            if (cpuStrategyType == Configuration.Constant.strategy_1_4_)
+                _player2 = PlayerFactory.CreatePlayer(StrategyFactory.CreateStrategyA());
+            if (cpuStrategyType == Configuration.Constant.strategy_2_5_)
+                _player2 = PlayerFactory.CreatePlayer(StrategyFactory.CreateStrategyB());
+            Log.Information($"Created Player {_player2}");
+        }
+
     }
 }

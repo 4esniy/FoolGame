@@ -25,19 +25,14 @@ namespace Durak
 
         internal Table (IConfigurationSetter languageSet, IDeck deck, IPlayerSetter playerSetter)
         {
-            try
-            {
-                _languageSet = languageSet;
-                _deck = deck;
-                _playerSetter = playerSetter;
-            }
-            catch (NullReferenceException e)
-            {
-                Console.WriteLine($"{nameof(Table)}received empty parameters. {e.Message}");
-                Console.ReadKey();
-                Environment.Exit(0);
-            }
+            if (languageSet == null || deck == null || playerSetter == null)
+                throw new NullReferenceException(nameof(Table));
 
+            _languageSet = languageSet;
+            _deck = deck;
+            _playerSetter = playerSetter;
+
+            _playerSetter.CreatePlayers();
             Player Man = _playerSetter.player1;
             Player CPU = _playerSetter.player2;
             string UserName = _playerSetter.UserName;

@@ -101,6 +101,12 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Serilog, Version=2.0.0.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10, processorArchitecture=MSIL">
+      <HintPath>..\packages\Serilog.2.9.0\lib\net46\Serilog.dll</HintPath>
+    </Reference>
+    <Reference Include="Serilog.Sinks.File, Version=2.0.0.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10, processorArchitecture=MSIL">
+      <HintPath>..\packages\Serilog.Sinks.File.4.1.0\lib\net45\Serilog.Sinks.File.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
@@ -113,8 +119,19 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CardAttributesConverter.cs" />
+    <Compile Include="ConsoleReadWrap.cs" />
     <Compile Include="DataBaseReader.cs" />
+    <Compile Include="Interfaces\IConsoleReadWrap.cs" />
     <Compile Include="Interfaces\IDataReader.cs" />
+    <Compile Include="Interfaces\IManualInputProvider.cs" />
+    <Compile Include="Interfaces\IPlayer.cs" />
+    <Compile Include="Interfaces\IPlayerFactory.cs" />
+    <Compile Include="Interfaces\IStrategyFactory.cs" />
+    <Compile Include="Interfaces\ISecondaryInputProvider.cs" />
+    <Compile Include="ManualInputProvider.cs" />
+    <Compile Include="SecondaryInputProvider.cs" />
+    <Compile Include="StrategyFactory.cs" />
+    <Compile Include="PlayerFactory.cs" />
     <Compile Include="ReaderFactory.cs" />
     <Compile Include="Interfaces\IReaderFactory.cs" />
     <Compile Include="Interfaces\ILanguageDataProvider.cs" />
@@ -153,6 +170,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

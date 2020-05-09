@@ -1,57 +1,39 @@
-﻿using System;
-using System.CodeDom;
+﻿using Durak.Interfaces;
+using Serilog;
+using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using Durak.Interfaces;
 
 namespace Durak
 {
     public class LanguageDataProvider : ILanguageDataProvider
     {
-        private readonly Exception _ex;
+        public Exception Ex { get; }
+        public Dictionary<string, string> TextCollection { get; }
 
-        private Dictionary<string, string> _textCollection { get; }
-        private StringBuilder sb = new StringBuilder();
-
-        public LanguageDataProvider(IReaderFactory factory)
+        public LanguageDataProvider(IReaderFactory Factory)
         {
-            var _factory = factory;
-            IDataReader dataReader;
+            var factory = Factory;
 
             try
             {
-                dataReader = _factory.ReadFromXml();
-                _textCollection = dataReader.Read();
+                TextCollection = factory.ReadFromXml().Read();
             }
             catch (Exception e)
             {
-                _ex = e;
-                sb.Append($"{nameof(LanguageDataProvider)} ");
-                sb.Append($" {e.Message}");
-                sb.Append($" {e.StackTrace}");
-                Console.WriteLine(sb);
+                Ex = e;
             }
             finally
             {
-                if (_ex != null)
+                if (Ex != null)
                 {
                     try
                     {
-                        dataReader = _factory.ReadFromDb();
-                        _textCollection = dataReader.Read();
+                        TextCollection = factory.ReadFromDb().Read();
                     }
                     catch (Exception e)
                     {
-                        _ex = e;
-                        sb.Append($"{nameof(LanguageDataProvider)}");
-                        sb.Append($" {e.Message}");
-                        sb.Append($" {e.StackTrace}");
-                        Console.WriteLine(sb);
-                        Console.ReadKey();
-                        Environment.Exit(0);
+                        throw new Exception(nameof(LanguageDataProvider));
                     }
                 }
             }
@@ -60,13 +42,13 @@ namespace Durak
         public string GetTextFromConfiguration(string keyValue)
         {
             string temp = null;
-            foreach (var i in _textCollection)
+            foreach (var i in TextCollection)
             {
                 if (i.Key.Equals(keyValue))
                     temp = i.Value;
             }
             if (temp == null)
-                throw new ArgumentException("Incorrect Key value", nameof(GetTextFromConfiguration));
+                throw new ArgumentException("Key value does not exist", nameof(GetTextFromConfiguration));
 
             return temp;
         }

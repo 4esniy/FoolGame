@@ -5,7 +5,7 @@ namespace Durak.Interfaces
     interface IDeck
     {
         List<Card> _deckOfCards { get; }
-        void GiveCardFromDeck(int i, Player T);
+        void GiveCardFromDeck(int i, IPlayer player);
         string ShowTrumpCard();
         int HowManyCardsInDeck();
     }

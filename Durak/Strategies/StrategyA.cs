@@ -9,7 +9,7 @@ namespace Durak.Strategies
     {
         private IMessages _message;
 
-        internal StrategyA(IConfigurationSetter configuration)
+        public StrategyA(IConfigurationSetter configuration)
         {
             try
             {

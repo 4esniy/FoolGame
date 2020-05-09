@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using Durak.Interfaces;
 using Durak.Properties;
 
@@ -8,38 +9,23 @@ namespace Durak
 {
     public class DeckBuilder : IDeckBuilder
     {
-        private readonly string[] _names;
-        private readonly string[] _suits;
+        public string[] names { get; }
+        public string[] suits { get; }
         private readonly List<Card> _rawDeck = new List<Card>();
 
-        public DeckBuilder(ICardAttributesConverter cardAttributesProvider)
+        public DeckBuilder(ICardAttributesConverter cardAttributesConverter)
         {
-            try
-            {
-                if (cardAttributesProvider.Names == null || cardAttributesProvider.Suits == null)
-                    throw new ArgumentNullException(nameof(DeckBuilder), "Names and Suits data was not provided");
-                _names = cardAttributesProvider.Names;
-                _suits = cardAttributesProvider.Suits;
-            }
-            catch (ArgumentNullException e)
-            {
-                Console.WriteLine(e.Message);
-                throw;
-            }
+            if (cardAttributesConverter == null)
+                throw new Exception(nameof(DeckBuilder));
+            names = cardAttributesConverter.Names;
+            suits = cardAttributesConverter.Suits;
         }
 
         public Card CreateCard(int Rank, string Name, string Suit, bool Trump)
         {
-            try
-            {
                 Card c = new Card(Rank, Name, Suit, Trump);
                 return c;
-            }
-            catch (ArgumentNullException)
-            {
-                Console.WriteLine("Can't create Card. One of the credentials (Names or Suits) was missed");
-                throw;
-            }
+            
         }
 
         public List<Card> CreateDeck()
@@ -49,19 +35,19 @@ namespace Durak
             int trump = random1.Next(0, 4);
 
             //Create Deck
-            foreach (string str in _suits)
+            foreach (string str in suits)
             {
-                for (int i = 0, j = 0; i < _names.Count(); i++, j++)
+                for (int i = 0, j = 0; i < names.Count(); i++, j++)
                 {
-                    if (str == _suits[trump])
+                    if (str == suits[trump])
                     {
-                        Card card = CreateCard(i, _names[j], str, true);
+                        Card card = CreateCard(i, names[j], str, true);
                         _rawDeck.Add(card);
                     }
 
                     else
                     {
-                        Card card = CreateCard(i, _names[j], str, false);
+                        Card card = CreateCard(i, names[j], str, false);
                         _rawDeck.Add(card);
                     }
                 }

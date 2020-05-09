@@ -5,7 +5,7 @@ namespace Durak.TextClasses
 {
     public class Alerts : IAlerts
     {
-        public string enterInteger_1_ { get ;}
+        public string enterInteger_1_ { get; }
         public string enterNotBiggerThan_2_ { get; }
         public string enterPositiveNumber_3_ { get; }
         public string enterNotLessThan10_4_ { get; }
@@ -14,7 +14,7 @@ namespace Durak.TextClasses
 
         public Alerts(ILanguageDataProvider languageConfiguration)
         {
-            try
+            if (languageConfiguration != null)
             {
                 enterInteger_1_ = languageConfiguration.GetTextFromConfiguration("enterInteger_1_");
                 enterNotBiggerThan_2_ = languageConfiguration.GetTextFromConfiguration("enterNotBiggerThan_2_");
@@ -23,11 +23,9 @@ namespace Durak.TextClasses
                 userNameNotEmpty_5_ = languageConfiguration.GetTextFromConfiguration("userNameNotEmpty_5_");
                 noSuchStrategy_6_ = languageConfiguration.GetTextFromConfiguration("noSuchStrategy_6_");
             }
-            catch (Exception e)
+            else
             {
-                Console.WriteLine($"{nameof(Alerts)}received empty parameters. {e.Message}");
-                Console.ReadKey();
-                Environment.Exit(0);
+                throw new ArgumentNullException(nameof(Alerts));
             }
         }
     }

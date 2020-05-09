@@ -1,45 +1,37 @@
 ﻿using System;
+using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using Durak.Interfaces;
 using Durak.Properties;
 
 namespace Durak
 {
-    public class Player
+    public class Player : IPlayer
     {
-        private List<Card> CardsOnHands = new List<Card>();
-        private IStrategy _strategy;
-        private IMessages _message;
-        private IDefaultConstants _constant;
-        private int _minCards;
+        public List<Card> CardsOnHands { get; }
+        public IStrategy Strategy { get; }
+        public IMessages Message { get; }
+        public IDefaultConstants Constant { get; }
+        public int MinCards { get; }
 
 
-        internal Player(IConfigurationSetter configuration, IStrategy strategy)
+        public Player(IConfigurationSetter configuration, IStrategy strategy)
         {
-            try
-            {
-                _strategy = strategy;
-                _message = configuration.Message;
-                _constant = configuration.Constant;
-                _minCards = _constant.numberOfCards_1_;
-            }
-            catch (NullReferenceException e)
-            {
-                Console.WriteLine($"{nameof(Player)}received empty parameters. {e.Message}");
-                Console.ReadKey();
-                Environment.Exit(0);
-            }
+            Strategy = strategy;
+            Message = configuration.Message;
+            Constant = configuration.Constant;
+            MinCards = Constant.numberOfCards_1_;
+            CardsOnHands = new List<Card>();
         }
 
         public Card Attack(List<Card> CardsOnTable)
         {
-            return _strategy.Attack(CardsOnHands, CardsOnTable);
-
+           return Strategy.Attack(CardsOnHands, CardsOnTable);
         }
 
         public Card Defend(List<Card> CardsOnTable, Card CardToBeat)
         {
-            return _strategy.Defend(CardsOnTable, CardsOnHands, CardToBeat);
+            return Strategy.Defend(CardsOnTable, CardsOnHands, CardToBeat);
         }
 
         public void RemoveCardFromHands(Card CardToRemove)
@@ -49,33 +41,32 @@ namespace Durak
 
         public void ShowOnHands()
         {
-            Console.WriteLine($"{_message.yourCardsAre_1_}"); //You cards are:
+            Console.WriteLine($"{Message.yourCardsAre_1_}"); //You cards are:
             for (int i = 0; i < CardsOnHands.Count; i++)
             {
-                if (CardsOnHands[i].Trump == true)
+                if (CardsOnHands[i].Trump)
                     Console.WriteLine($"{i + 1} - {CardsOnHands[i].Name}, {CardsOnHands[i].Suit.ToUpper()}");
                 else
                     Console.WriteLine($"{i + 1} - {CardsOnHands[i].Name}, {CardsOnHands[i].Suit}");
             }
         }
 
-        internal int HowManyCardsOnHands()
+        public int HowManyCardsOnHands()
         {
             return CardsOnHands.Count;
         }
 
-        internal void AddCardToHands(Card AnyCard)
+        public void AddCardToHands(Card AnyCard)
         {
             CardsOnHands.Add(AnyCard);
         }
 
-        internal int CardsToTake()
+        public int CardsToTake()
         {
-            int i = 0;
-            if (CardsOnHands.Count >= _minCards)
+            if (CardsOnHands.Count >= MinCards)
                 return 0;
-            else
-                return i = _minCards - CardsOnHands.Count;
+
+            return MinCards - CardsOnHands.Count;
         }
     }
 }

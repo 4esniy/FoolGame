@@ -7,23 +7,19 @@ namespace Durak
 {
     public class Deck : IDeck
     {
-        public List<Card> _deckOfCards {get; }
+        public List<Card> _deckOfCards { get; }
 
         public Deck(IDeckBuilder deckBuilder)
         {
-            try
-            {
+            if (deckBuilder != null)
                 _deckOfCards = deckBuilder.CreateDeck();
-            }
-            catch (NullReferenceException e)
+            else
             {
-                Console.WriteLine($"Received value of {nameof(Deck)} is empty {e.Message}");
-                Console.ReadKey();
-                Environment.Exit(0);
+                throw new ArgumentNullException(nameof(deckBuilder));
             }
         }
 
-        public void GiveCardFromDeck(int i, Player T)
+        public void GiveCardFromDeck(int i, IPlayer player)
         {
 
             if (_deckOfCards.Count > 0)
@@ -32,7 +28,7 @@ namespace Durak
                 {
                     if (_deckOfCards.Count > 0)
                     {
-                        T.AddCardToHands(_deckOfCards[0]);
+                        player.AddCardToHands(_deckOfCards[0]);
                         _deckOfCards.RemoveAt(0);
                     }
                 }
@@ -41,15 +37,14 @@ namespace Durak
 
         public string ShowTrumpCard()
         {
-            
-            string temp=null;
+            string temp = null;
             foreach (Card i in _deckOfCards)
                 if (i.Trump)
                 {
                     temp = i.Suit;
                     break;
                 }
-            
+
             return temp;
         }
 
