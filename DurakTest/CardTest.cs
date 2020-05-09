@@ -1,10 +1,6 @@
-﻿using System;
-using System.Text;
-using System.Collections.Generic;
-using Durak;
+﻿using Durak;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Durak.Properties;
-using Moq;
+using System;
 
 namespace DurakTest
 {
@@ -33,18 +29,17 @@ namespace DurakTest
             
         }
 
-
         [TestMethod]
         public void CotrTestNameIsNotNull()
         {
             //Arrange
-            Exception ex = null;
+            Exception ex=null;
             //Act
             try
             {
                 Card expectedCard = new Card(rank, null, suit, trumpTrue);
             }
-            catch (ArgumentNullException e)
+            catch (Exception e)
             {
                 ex = e;
             }
@@ -57,31 +52,10 @@ namespace DurakTest
         {
             //Arrange
             var expectedCard = new Card(rank, name, suit, trumpTrue);
+            var message = trumpTrue ? $"{name}, {suit.ToUpper()}" : $"{name}, {suit}";
             //Act
             //Assert
-
-            try
-            {
-                expectedCard.Show();
-                Assert.IsTrue(true);
-            }
-            catch
-            {
-                Assert.IsTrue(false);
-            }
-
-
-            var expectedCard2 = new Card(rank, name, suit, trumpFalse);
-
-            try
-            {
-                expectedCard2.Show();
-                Assert.IsTrue(true);
-            }
-            catch
-            {
-                Assert.IsTrue(false);
-            }
+            Assert.AreEqual(message, expectedCard.Show());
         }
     }
 }

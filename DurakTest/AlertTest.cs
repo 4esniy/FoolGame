@@ -17,16 +17,14 @@ namespace DurakTest
     public class AlertTest
     {
         [TestMethod]
-        public void PropertyWasSet()
+        public void AlertTestPropertyShouldBeSet()
         {
             //Assign
             var mockConfiguration = new Mock<ILanguageDataProvider>();
             mockConfiguration.Setup(x => x.GetTextFromConfiguration(""))
                 .Returns("fakeMessage");
-
             //Act
             var alert = new Alerts(mockConfiguration.Object);
-
             //Assert
             Assert.IsNotNull(alert.enterInteger_1_ == "fakeMessage");
             Assert.IsNotNull(alert.enterNotBiggerThan_2_ == "fakeMessage");
@@ -34,6 +32,15 @@ namespace DurakTest
             Assert.IsNotNull(alert.enterPositiveNumber_3_ == "fakeMessage");
             Assert.IsNotNull(alert.noSuchStrategy_6_== "fakeMessage");
             Assert.IsNotNull(alert.userNameNotEmpty_5_== "fakeMessage");
+        }
+
+        [TestMethod]
+        public void AlertTestShouldThrowException()
+        {
+            //Assign
+            //Act
+            //Assert
+            Assert.ThrowsException<ArgumentNullException>(() => new Alerts(null));
         }
     }
 }

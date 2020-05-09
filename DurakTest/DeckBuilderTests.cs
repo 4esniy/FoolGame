@@ -1,100 +1,76 @@
-﻿using System;
-using System.Text;
-using System.Collections.Generic;
-using Durak;
+﻿using Durak;
 using Durak.Interfaces;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using Durak.Properties;
+using System;
+using System.Collections.Generic;
 
 namespace DurakTest
 {
-    /// <summary>
-    /// Summary description for DeckTests
-    /// </summary>
     [TestClass]
     public class DeckBuilderTests
     {
-        [TestMethod]
-        public void DeckBuilderConstructorTestNamesIsNotNull()
+        private readonly Mock<ICardAttributesConverter> cardAttributesProviderMock;
+        private readonly string[] _names = { "Six", "Seven", "Ace" };
+        private readonly string[] _suits = { "Clubs", "Diamonds", "Hearts", "Spades" };
+        private Exception _ex = null;
+        private readonly DeckBuilder _deckBuilder;
+
+
+        public DeckBuilderTests()
         {
-            // ARRANGE
-            string[] suits = { "Clubs", "Diamonds", "Hearts", "Spades" };
-            Exception ex = null;
-            var mockCardAttributesProvider = new Mock<ICardAttributesConverter>();
-            mockCardAttributesProvider.SetupAllProperties();
-            mockCardAttributesProvider.Object.Names = null;
-            mockCardAttributesProvider.Object.Suits = suits;
-            // ACT
-            try
-            {
-                var deckBuilder = new DeckBuilder(mockCardAttributesProvider.Object);
-            }
-            catch (ArgumentNullException e)
-            {
-                ex = e;
-            }
-            //Assert
-            Assert.IsNotNull(ex);
-            
+            cardAttributesProviderMock = new Mock<ICardAttributesConverter>();
+            cardAttributesProviderMock.Setup(x => x.Names).Returns(_names);
+            cardAttributesProviderMock.Setup(x => x.Suits).Returns(_suits);
+            _deckBuilder = new DeckBuilder(cardAttributesProviderMock.Object);
         }
 
         [TestMethod]
-        public void DeckBuilderConstructorTestSuitsIsNotNull()
+        public void DeckBuilderTestPropertiesShouldBeSet()
         {
             // ARRANGE
-            string[] names = { "Six", "Seven", "Ace" };
-            Exception ex = null;
-            var mockCardAttributesProvider = new Mock<ICardAttributesConverter>();
-            mockCardAttributesProvider.SetupAllProperties();
-            mockCardAttributesProvider.Object.Names = names;
-            mockCardAttributesProvider.Object.Suits = null;
             // ACT
-            try
-            {
-                var deckBuilder = new DeckBuilder(mockCardAttributesProvider.Object);
-            }
-            catch (ArgumentNullException e)
-            {
-                ex = e;
-            }
             //Assert
-            Assert.IsNotNull(ex);
+            Assert.AreEqual(_names, _deckBuilder.names);
+            Assert.AreEqual(_suits, _deckBuilder.suits);
         }
 
         [TestMethod]
-        public void DeckBuilderCreateDeckTestDeckIsNotEmpty()
+        public void DeckBuilderTestShouldThrowException()
         {
             // ARRANGE
-            string[] names = { "Six", "Seven", "Ace" };
-            string[] suits = { "Clubs", "Diamonds", "Hearts", "Spades" };
-            var mockCardAttributesProvider = new Mock<ICardAttributesConverter>();
-            mockCardAttributesProvider.SetupAllProperties();
-            mockCardAttributesProvider.Object.Names = names;
-            mockCardAttributesProvider.Object.Suits = suits;
             // ACT
-                var deckBuilder = new DeckBuilder(mockCardAttributesProvider.Object);
-                List<Card> i = deckBuilder.CreateDeck();
+            try
+            {
+                var builder = new DeckBuilder(null);
+            }
+            catch (Exception e)
+            {
+                _ex = e;
+            }
+            //Assert
+            Assert.IsNotNull(_ex);
+        }
+
+        [TestMethod]
+        public void DeckBuilderTestCardShouldBeCreated()
+        {
+            // ARRANGE
+            // ACT
+            Card Card = _deckBuilder.CreateCard(1, "name", "suit", true);
+            //Assert
+            Assert.IsTrue(Card.Trump);
+        }
+
+        [TestMethod]
+        public void DeckBuilderTestDeckShouldBeCreated()
+        {
+            // ARRANGE
+
+            // ACT
+            List<Card> i = _deckBuilder.CreateDeck();
             //Assert
             Assert.IsTrue(i.Count > 0);
         }
-
-        [TestMethod]
-        public void DeckBuilderCreateCardTest()
-        {
-            // ARRANGE
-            string[] names = { "Six", "Seven", "Ace" };
-            string[] suits = { "Clubs", "Diamonds", "Hearts", "Spades" };
-            ArgumentNullException ex = null;
-            var mockCardAttributesProvider = new Mock<ICardAttributesConverter>();
-            mockCardAttributesProvider.SetupAllProperties();
-            mockCardAttributesProvider.Object.Names = names;
-            mockCardAttributesProvider.Object.Suits = suits;
-            // ACT
-            var deckBuilder = new DeckBuilder(mockCardAttributesProvider.Object);
-            ////Assert
-            Assert.ThrowsException<ArgumentNullException>(() => deckBuilder.CreateCard(0, null, "Clubs", true));
-        }
-
     }
 }

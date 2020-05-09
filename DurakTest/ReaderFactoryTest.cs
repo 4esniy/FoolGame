@@ -15,17 +15,31 @@ namespace DurakTest
     public class ReaderFactoryTest
     {
         [TestMethod]
-        public void IsXmlReaderCreated()
+        public void ReaderFactoryTestShouldCreateXMLReader()
         {
             //Assign
             var languageType = 1;
             var readerFactory = new ReaderFactory(languageType);
-            IDataReader _dataReader;
+            IDataReader _dataReader = new XMLReader(languageType);
 
             //Act
-            _dataReader = readerFactory.ReadFromXml();
+            var dataReader = readerFactory.ReadFromXml();
             //Assert
-            Assert.IsNotNull(_dataReader.TextCollection);
+            Assert.IsInstanceOfType(dataReader, _dataReader.GetType() );
+        }
+
+        [TestMethod]
+        public void ReaderFactoryTestShouldCreateDBReader()
+        {
+            //Assign
+            var languageType = 1;
+            var readerFactory = new ReaderFactory(languageType);
+            IDataReader dataReader = new DataBaseReader(languageType);
+
+            //Act
+            var DataReader = readerFactory.ReadFromDb();
+            //Assert
+            Assert.IsInstanceOfType(DataReader, dataReader.GetType());
         }
     }
 }

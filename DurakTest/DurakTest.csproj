@@ -63,14 +63,19 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AlertTest.cs" />
-    <Compile Include="CardAttributesProviderTest.cs" />
+    <Compile Include="CardAttributesConverterTest.cs" />
     <Compile Include="CardTest.cs" />
+    <Compile Include="ConfigurationSetterTest.cs" />
+    <Compile Include="DataBaseReaderTest.cs" />
     <Compile Include="DeckBuilderTests.cs" />
     <Compile Include="DeckTest.cs" />
     <Compile Include="DefaultConstantsTest.cs" />
     <Compile Include="MessageTest.cs" />
-    <Compile Include="LanguageConfigurationReaderTest.cs" />
+    <Compile Include="LanguageDataProviderTest.cs" />
+    <Compile Include="PlayerTest.cs" />
     <Compile Include="ReaderFactoryTest.cs" />
+    <Compile Include="ManualInputProviderTest.cs" />
+    <Compile Include="PlayerSetterTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
