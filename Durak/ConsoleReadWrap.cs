@@ -16,5 +16,14 @@ namespace Durak
             return ConfigurationManager.AppSettings["Message"];
         }
 
+        public void ConsoleReadKey()
+        {
+            Console.ReadKey();
+        }
+
+        public void ReturnExit()
+        {
+            Environment.Exit(0);
+        }
     }
 }

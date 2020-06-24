@@ -4,6 +4,8 @@ using System.Runtime.CompilerServices;
 using Durak.Interfaces;
 using Durak.Properties;
 using Durak.TextClasses;
+using Serilog;
+using Serilog.Core;
 
 namespace Durak
 {
@@ -31,7 +33,7 @@ namespace Durak
             }
             catch (Exception e)
             {
-                //log
+                Log.Error($"{nameof(ConfigurationSetter)}, {e.Message}, {e.StackTrace}");
                 Console.WriteLine(e.StackTrace);
                 Console.ReadKey();
                 Environment.Exit(0);
@@ -46,7 +48,7 @@ namespace Durak
             }
             catch (Exception e)
             {
-                //log
+                Log.Error($"{nameof(ConfigurationSetter)}, {e.Message}, {e.StackTrace}");
                 Console.WriteLine(e.StackTrace);
                 Console.ReadKey();
                 Environment.Exit(0);

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Durak.Interfaces;
 using Durak.Properties;
 
@@ -10,23 +11,22 @@ namespace Durak.Strategies
         private IMessages _message;
         private IAlerts _alert;
 
-        public HumanStrategy(IConfigurationSetter configuration)
+        private IConsoleReadWrap _consoleRead;
+        //private ISecondaryInputProvider _inputProvider;
+        //ISecondaryInputProvider inputProvider
+
+        public HumanStrategy(IConfigurationSetter configuration, IConsoleReadWrap consoleRead)
         {
-            try
-            {
-                _message = configuration.Message;
-                _alert = configuration.Alert;
-            }
-            catch (NullReferenceException e)
-            {
-                Console.WriteLine($"{nameof(HumanStrategy)}received empty parameters. {e.Message}");
-                Console.ReadKey();
-                Environment.Exit(0);
-            }
+            if (configuration == null || consoleRead == null)
+                throw new NullReferenceException(nameof(HumanStrategy));
+            _message = configuration.Message;
+            _alert = configuration.Alert;
+            _consoleRead = consoleRead;
+            //_inputProvider = inputProvider;
 
         }
 
-        //check if Player chosed right card to beat CardsOnHands or PossibleAttackCards
+        //check if Player chose right card to beat CardsOnHands or PossibleAttackCards
         public Card Attack(List<Card> CardsOnHands, List<Card> CardsOnTable)
         {
             string Input = null;
@@ -62,7 +62,7 @@ namespace Durak.Strategies
                 Card Temp = null;
                 while (Continue)
                 {
-                    Input = Console.ReadLine();
+                    Input = _consoleRead.ConsoleReadLine();
                     bool Cont = true;
                     while (Cont)
                     {
@@ -74,7 +74,7 @@ namespace Durak.Strategies
                         catch (Exception)
                         {
                             Console.WriteLine($"{_alert.enterInteger_1_}"); //You should enter an integer
-                            Input = Console.ReadLine();
+                            Input = _consoleRead.ConsoleReadLine();
                         }
                     }
                     Enter = int.Parse(Input);
@@ -100,12 +100,10 @@ namespace Durak.Strategies
                 }
                 return Temp;
             }
-            else
-            {
-                Console.WriteLine($"{_message.haveNoCardsToAttack_6_}"); //You have no cards to attack, press any key to continue
-                Console.ReadKey();
-                return null;
-            }
+
+            Console.WriteLine($"{_message.haveNoCardsToAttack_6_}"); //You have no cards to attack, press any key to continue
+            _consoleRead.ConsoleReadKey();
+            return null;
 
 
         }
@@ -125,7 +123,7 @@ namespace Durak.Strategies
             {
                 while (Continue)
                 {
-                    Input = Console.ReadLine();
+                    Input = _consoleRead.ConsoleReadLine();
                     bool Contin = true;
                     while (Contin)
                     {
@@ -137,7 +135,7 @@ namespace Durak.Strategies
                         catch (Exception)
                         {
                             Console.WriteLine($"{_alert.enterInteger_1_}"); //You should enter an integer
-                            Input = Console.ReadLine();
+                            Input = _consoleRead.ConsoleReadLine();
                         }
                     }
 
@@ -169,12 +167,10 @@ namespace Durak.Strategies
                 }
                 return defCard;
             }
-            else
-            {
-                Console.WriteLine($"{_message.haveNoCardsToDefend_10_}"); //You have no cards to defend, press any key to take cards
-                Console.ReadKey();
-                return null;
-            }
+
+            Console.WriteLine($"{_message.haveNoCardsToDefend_10_}"); //You have no cards to defend, press any key to take cards
+            _consoleRead.ConsoleReadKey();
+            return null;
 
         }
 
@@ -191,6 +187,7 @@ namespace Durak.Strategies
                     }
                 }
             }
+            possibleAttackCards=possibleAttackCards.Distinct().ToList();
             return possibleAttackCards;
         }
 
@@ -218,10 +215,10 @@ namespace Durak.Strategies
                     }
                 }
             }
+
+            possibleDefendCards = possibleDefendCards.Distinct().ToList();
             return possibleDefendCards;
         }
-
-
 
         public Card ChooseMinRankCard(List<Card> SomeCards, bool WithTrump)
         {

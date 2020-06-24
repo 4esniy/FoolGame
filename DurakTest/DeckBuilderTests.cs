@@ -13,7 +13,8 @@ namespace DurakTest
         private readonly Mock<ICardAttributesConverter> cardAttributesProviderMock;
         private readonly string[] _names = { "Six", "Seven", "Ace" };
         private readonly string[] _suits = { "Clubs", "Diamonds", "Hearts", "Spades" };
-        private Exception _ex = null;
+        private Exception _ex;
+        private int gameType = 1;
         private readonly DeckBuilder _deckBuilder;
 
 
@@ -22,7 +23,7 @@ namespace DurakTest
             cardAttributesProviderMock = new Mock<ICardAttributesConverter>();
             cardAttributesProviderMock.Setup(x => x.Names).Returns(_names);
             cardAttributesProviderMock.Setup(x => x.Suits).Returns(_suits);
-            _deckBuilder = new DeckBuilder(cardAttributesProviderMock.Object);
+            _deckBuilder = new DeckBuilder(cardAttributesProviderMock.Object, gameType);
         }
 
         [TestMethod]
@@ -39,10 +40,11 @@ namespace DurakTest
         public void DeckBuilderTestShouldThrowException()
         {
             // ARRANGE
+            int temp = 1;
             // ACT
             try
             {
-                var builder = new DeckBuilder(null);
+                var builder = new DeckBuilder(null, temp);
             }
             catch (Exception e)
             {

@@ -8,6 +8,8 @@ namespace Durak.Interfaces
 {
     public interface ILanguageDataProvider
     {
-        string GetTextFromConfiguration(string keyValue);
+        string GetAlertFromConfiguration(string keyValue);
+        string GetMessageFromConfiguration(string keyValue);
+        string GetAttributesFromConfiguration(string keyValue);
     }
 }

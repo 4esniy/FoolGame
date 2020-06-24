@@ -1,13 +1,13 @@
-﻿using System;
+﻿using Durak.Interfaces;
+using System;
 using System.Collections.Generic;
-using Durak.Interfaces;
-using Durak.Properties;
+using System.ComponentModel.DataAnnotations;
 
 namespace Durak
 {
     public class Deck : IDeck
     {
-        public List<Card> _deckOfCards { get; }
+        public List<Card> _deckOfCards { get; set; }
 
         public Deck(IDeckBuilder deckBuilder)
         {

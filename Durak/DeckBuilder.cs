@@ -13,19 +13,29 @@ namespace Durak
         public string[] suits { get; }
         private readonly List<Card> _rawDeck = new List<Card>();
 
-        public DeckBuilder(ICardAttributesConverter cardAttributesConverter)
+        public DeckBuilder(ICardAttributesConverter cardAttributesConverter, int gameType)
         {
             if (cardAttributesConverter == null)
                 throw new Exception(nameof(DeckBuilder));
-            names = cardAttributesConverter.Names;
-            suits = cardAttributesConverter.Suits;
+
+            if (gameType == 1)
+            {
+                names = cardAttributesConverter.Names;
+                suits = cardAttributesConverter.Suits;
+            }
+
+            if (gameType == 2)
+            {
+                NotImplementedException e;
+            }
+
         }
 
         public Card CreateCard(int Rank, string Name, string Suit, bool Trump)
         {
-                Card c = new Card(Rank, Name, Suit, Trump);
-                return c;
-            
+            Card c = new Card(Rank, Name, Suit, Trump);
+            return c;
+
         }
 
         public List<Card> CreateDeck()

@@ -7,5 +7,6 @@ namespace Durak
         IConsoleReadWrap _consoleReadWrap { get; }
         string ReturnUserNameInputValue();
         string ReturnStrategyTypeInputValue();
+        int ReturnTypeOfGame();
     }
 }

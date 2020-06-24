@@ -10,5 +10,6 @@ namespace Durak.Interfaces
     {
         IDataReader ReadFromXml();
         IDataReader ReadFromDb();
+        IDataReader ReadUsingEF();
     }
 }

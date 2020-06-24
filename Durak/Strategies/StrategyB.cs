@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Durak.Interfaces;
 using Durak.Properties;
 
@@ -8,19 +9,15 @@ namespace Durak.Strategies
     public class StrategyB : IStrategy
     {
         private IMessages _message;
+        private IConsoleReadWrap _consoleRead;
 
-        internal StrategyB(IConfigurationSetter configuration)
+        public StrategyB(IConfigurationSetter configuration, IConsoleReadWrap consoleRead)
         {
-            try
-            {
-                _message = configuration.Message;
-            }
-            catch (NullReferenceException e)
-            {
-                Console.WriteLine($"{nameof(StrategyB)}received empty parameters. {e.Message}");
-                Console.ReadKey();
-                Environment.Exit(0);
-            }
+
+            if (configuration == null || consoleRead == null)
+                throw new NullReferenceException(nameof(StrategyA));
+            _message = configuration.Message;
+            _consoleRead = consoleRead;
         }
 
         public Card Attack(List<Card> CardsOnHands, List<Card> CardsOnTable)
@@ -86,7 +83,7 @@ namespace Durak.Strategies
             else
             {
                 Console.WriteLine($"{_message.cpuHasNoDefendCard_33_}"); //CPU has no cards to defend, press any key to continue
-                Console.ReadKey();
+                _consoleRead.ConsoleReadKey();
                 return null;
             }
         }
@@ -102,6 +99,7 @@ namespace Durak.Strategies
                         possibleAttackCards.Add(CardsOnHands[i]);
                 }
             }
+            possibleAttackCards = possibleAttackCards.Distinct().ToList();
             return possibleAttackCards;
         }
 
@@ -129,13 +127,13 @@ namespace Durak.Strategies
                     }
                 }
             }
+            possibleDefendCards = possibleDefendCards.Distinct().ToList();
             return possibleDefendCards;
         }
 
 
         public Card ChooseMinRankCard(List<Card> SomeCards, bool OnlyTrumpCards)
         {
-            Card minRankCard = null;
 
             List<Card> temp = new List<Card>();
             for (int i = 1; i <= SomeCards.Count; i++)
@@ -143,30 +141,28 @@ namespace Durak.Strategies
                 if (SomeCards[i - 1].Trump == OnlyTrumpCards)
                     temp.Add(SomeCards[i - 1]);
             }
-            if (temp.Count != 0)
-            {
-                int n = temp.Count - 1;
-                int MinCardRank = temp[n].Rank;
-                int indexMinCardRank = n;
 
-                while (n > 0)
-                {
-                    if (MinCardRank - temp[n - 1].Rank > 0)
-                    {
-                        MinCardRank = temp[n - 1].Rank;
-                        indexMinCardRank = n - 1;
-                        n--;
-                    }
-                    else
-                    {
-                        n--;
-                    }
-                }
-
-                return minRankCard = temp[indexMinCardRank];
-            }
-            else
+            if (temp.Count == 0)
                 return null;
+
+            int n = temp.Count - 1;
+            int MinCardRank = temp[n].Rank;
+            int indexMinCardRank = n;
+
+            while (n > 0)
+            {
+                if (MinCardRank - temp[n - 1].Rank > 0)
+                {
+                    MinCardRank = temp[n - 1].Rank;
+                    indexMinCardRank = n - 1;
+                    n--;
+                }
+                else
+                {
+                    n--;
+                }
+            }
+            return temp[indexMinCardRank];
         }
     }
 }

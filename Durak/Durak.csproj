@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\EntityFramework.6.4.4\build\EntityFramework.props" Condition="Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -28,6 +29,8 @@
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -101,6 +104,12 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
     <Reference Include="Serilog, Version=2.0.0.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10, processorArchitecture=MSIL">
       <HintPath>..\packages\Serilog.2.9.0\lib\net46\Serilog.dll</HintPath>
     </Reference>
@@ -108,6 +117,7 @@
       <HintPath>..\packages\Serilog.Sinks.File.4.1.0\lib\net45\Serilog.Sinks.File.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -121,23 +131,34 @@
     <Compile Include="CardAttributesConverter.cs" />
     <Compile Include="ConsoleReadWrap.cs" />
     <Compile Include="DataBaseReader.cs" />
+    <Compile Include="DBManager.cs" />
+    <Compile Include="DBConfigureClasses\Game.cs" />
+    <Compile Include="EFDataBaseReader.cs" />
+    <Compile Include="Interfaces\IDBManager.cs" />
+    <Compile Include="Rules\FoolGame36Cards.cs" />
+    <Compile Include="GameLoader.cs" />
+    <Compile Include="Factories\GamesFactory.cs" />
+    <Compile Include="Interfaces\IGameLoader.cs" />
+    <Compile Include="Interfaces\ICardGameRules.cs" />
     <Compile Include="Interfaces\IConsoleReadWrap.cs" />
     <Compile Include="Interfaces\IDataReader.cs" />
+    <Compile Include="Interfaces\IGamesFactory.cs" />
     <Compile Include="Interfaces\IManualInputProvider.cs" />
     <Compile Include="Interfaces\IPlayer.cs" />
     <Compile Include="Interfaces\IPlayerFactory.cs" />
     <Compile Include="Interfaces\IStrategyFactory.cs" />
     <Compile Include="Interfaces\ISecondaryInputProvider.cs" />
+    <Compile Include="Interfaces\IUserIdetifier.cs" />
     <Compile Include="ManualInputProvider.cs" />
     <Compile Include="SecondaryInputProvider.cs" />
-    <Compile Include="StrategyFactory.cs" />
-    <Compile Include="PlayerFactory.cs" />
+    <Compile Include="Factories\StrategyFactory.cs" />
+    <Compile Include="Factories\PlayerFactory.cs" />
     <Compile Include="ReaderFactory.cs" />
     <Compile Include="Interfaces\IReaderFactory.cs" />
     <Compile Include="Interfaces\ILanguageDataProvider.cs" />
-    <Compile Include="Interfaces\IPlayerSetter.cs" />
+    <Compile Include="Interfaces\IGameSetter.cs" />
     <Compile Include="LanguageDataProvider.cs" />
-    <Compile Include="PlayerSetter.cs" />
+    <Compile Include="GameSetter.cs" />
     <Compile Include="ConfigurationSetter.cs" />
     <Compile Include="DeckBuilder.cs" />
     <Compile Include="GameStarter.cs" />
@@ -149,7 +170,7 @@
     <Compile Include="TextClasses\DefaultConstants.cs" />
     <Compile Include="Interfaces\IDefaultConstants.cs" />
     <Compile Include="Interfaces\IAlerts.cs" />
-    <Compile Include="Card.cs" />
+    <Compile Include="DBConfigureClasses\Card.cs" />
     <Compile Include="Interfaces\IMessages.cs" />
     <Compile Include="Interfaces\IStrategy.cs" />
     <Compile Include="TextClasses\Messages.cs" />
@@ -160,12 +181,13 @@
     </Compile>
     <Compile Include="Strategies\StrategyB.cs" />
     <Compile Include="Strategies\StrategyA.cs" />
-    <Compile Include="Deck.cs" />
+    <Compile Include="DBConfigureClasses\Deck.cs" />
     <Compile Include="Strategies\HumanStrategy.cs" />
-    <Compile Include="Player.cs" />
+    <Compile Include="DBConfigureClasses\Player.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Table.cs" />
+    <Compile Include="UserIdetifier.cs" />
     <Compile Include="XMLReader.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -188,6 +210,19 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\Durak.DataModel\Durak.DataModel.csproj">
+      <Project>{47133006-1b7d-4d91-9c9e-dfcd9aab8900}</Project>
+      <Name>Durak.DataModel</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.4.4\build\EntityFramework.props'))" />
+    <Error Condition="!Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.4.4\build\EntityFramework.targets'))" />
+  </Target>
+  <Import Project="..\packages\EntityFramework.6.4.4\build\EntityFramework.targets" Condition="Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.targets')" />
 </Project>

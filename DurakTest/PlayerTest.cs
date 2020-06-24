@@ -38,7 +38,7 @@ namespace DurakTest
                 .Returns(It.IsAny<string>());
 
             StrategyMock
-                .Setup(x => x.Attack(CardList, CardList))
+                .Setup(x => x.Attack(It.IsAny<List<Card>>(), CardList))
                 .Returns(ExpectedCard);
 
             StrategyMock
@@ -46,8 +46,8 @@ namespace DurakTest
                 .Returns(CardList);
 
             StrategyMock
-                .Setup(x => x.Defend(CardList, CardList, ExpectedCard))
-                .Returns(new Card(1, "fakeName", "fakeSuit", true));
+                .Setup(x => x.Defend(It.IsAny<List<Card>>(), It.IsAny<List<Card>>(), It.IsAny<Card>()))
+                .Returns(ExpectedCard);
 
             _player = new Player(ConfigurationMock.Object, StrategyMock.Object);
         }
@@ -66,13 +66,15 @@ namespace DurakTest
             Assert.IsNotNull(_player.MinCards);
         }
 
+
+
         [TestMethod]
         public void PlayerAttackShouldReturnCard()
         {
             //Arrange
             //Act
             Card actualCard = _player.Attack(CardList);
-            StrategyMock.Verify(x => x.Attack(CardList, CardList), Times.Exactly(1));
+            StrategyMock.Verify(x => x.Attack(It.IsAny<List<Card>>(), CardList), Times.Exactly(1));
             //Assert
             Assert.AreEqual(ExpectedCard, actualCard);
         }
@@ -83,8 +85,9 @@ namespace DurakTest
             //Arrange
             //Act
             Card actualCard = _player.Defend(CardList, ExpectedCard);
-            StrategyMock.Verify(x => x.Defend(CardList, CardList, ExpectedCard), Times.Exactly(1));
+            StrategyMock.Verify(x => x.Defend(It.IsAny<List<Card>>(), It.IsAny<List<Card>>(), It.IsAny<Card>()), Times.Exactly(1));
             //Assert
+            Assert.IsNotNull(actualCard);
             Assert.AreEqual(ExpectedCard, actualCard);
         }
 
@@ -165,5 +168,7 @@ namespace DurakTest
             //Assert
             Assert.IsTrue(numberCardsToTake.Equals(0));
         }
+
+       
     }
 }

@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Durak", "Durak\Durak.csproj
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DurakTest", "DurakTest\DurakTest.csproj", "{615E4091-5AA5-4289-9CAE-F7713A03E7EC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Durak.DataModel", "Durak.DataModel\Durak.DataModel.csproj", "{47133006-1B7D-4D91-9C9E-DFCD9AAB8900}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -41,6 +43,18 @@ Global
 		{615E4091-5AA5-4289-9CAE-F7713A03E7EC}.Release|Any CPU.Build.0 = Release|Any CPU
 		{615E4091-5AA5-4289-9CAE-F7713A03E7EC}.Release|x64.ActiveCfg = Release|Any CPU
 		{615E4091-5AA5-4289-9CAE-F7713A03E7EC}.Release|x64.Build.0 = Release|Any CPU
+		{47133006-1B7D-4D91-9C9E-DFCD9AAB8900}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{47133006-1B7D-4D91-9C9E-DFCD9AAB8900}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{47133006-1B7D-4D91-9C9E-DFCD9AAB8900}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{47133006-1B7D-4D91-9C9E-DFCD9AAB8900}.Debug|x64.Build.0 = Debug|Any CPU
+		{47133006-1B7D-4D91-9C9E-DFCD9AAB8900}.Fool_test|Any CPU.ActiveCfg = Release|Any CPU
+		{47133006-1B7D-4D91-9C9E-DFCD9AAB8900}.Fool_test|Any CPU.Build.0 = Release|Any CPU
+		{47133006-1B7D-4D91-9C9E-DFCD9AAB8900}.Fool_test|x64.ActiveCfg = Release|Any CPU
+		{47133006-1B7D-4D91-9C9E-DFCD9AAB8900}.Fool_test|x64.Build.0 = Release|Any CPU
+		{47133006-1B7D-4D91-9C9E-DFCD9AAB8900}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{47133006-1B7D-4D91-9C9E-DFCD9AAB8900}.Release|Any CPU.Build.0 = Release|Any CPU
+		{47133006-1B7D-4D91-9C9E-DFCD9AAB8900}.Release|x64.ActiveCfg = Release|Any CPU
+		{47133006-1B7D-4D91-9C9E-DFCD9AAB8900}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

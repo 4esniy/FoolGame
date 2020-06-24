@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace Durak
 {
@@ -7,10 +8,10 @@ namespace Durak
         /// <summary>
         /// Set identifier to a card instance
         /// </summary>
-        public int Rank { get; }
-        public string Name { get; }
-        public string Suit { get; }
-        public bool Trump { get; }
+        public int Rank { get; set; }
+        public string Name { get; set; }
+        public string Suit { get; set; }
+        public bool Trump { get; set; }
 
         public Card(int rank, string name, string suit, bool trump)
         {

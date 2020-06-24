@@ -70,12 +70,19 @@
     <Compile Include="DeckBuilderTests.cs" />
     <Compile Include="DeckTest.cs" />
     <Compile Include="DefaultConstantsTest.cs" />
+    <Compile Include="HumanStrategyTest.cs" />
     <Compile Include="MessageTest.cs" />
     <Compile Include="LanguageDataProviderTest.cs" />
+    <Compile Include="PlayerFactoryTest.cs" />
     <Compile Include="PlayerTest.cs" />
     <Compile Include="ReaderFactoryTest.cs" />
     <Compile Include="ManualInputProviderTest.cs" />
     <Compile Include="PlayerSetterTest.cs" />
+    <Compile Include="StrategyB_Test.cs" />
+    <Compile Include="StrategyA_Test.cs" />
+    <Compile Include="StrategyFactoryTest.cs" />
+    <Compile Include="TableTest.cs" />
+    <Compile Include="EFDataBaseReaderTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

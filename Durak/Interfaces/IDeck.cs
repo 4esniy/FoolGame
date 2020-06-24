@@ -2,7 +2,7 @@
 
 namespace Durak.Interfaces
 {
-    interface IDeck
+    public interface IDeck
     {
         List<Card> _deckOfCards { get; }
         void GiveCardFromDeck(int i, IPlayer player);

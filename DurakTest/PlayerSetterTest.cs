@@ -17,6 +17,7 @@ namespace DurakTest
         private Mock<IPlayerFactory> PlayerFactory { get; }
         private Mock<IStrategyFactory> StrategyFactory { get; }
         private Mock<ISecondaryInputProvider> InputProvider { get; }
+        private Mock<IConsoleReadWrap> ConsoleReadMock { get; }
 
         public PlayerSetterTest()
         {
@@ -24,6 +25,7 @@ namespace DurakTest
             PlayerFactory = new Mock<IPlayerFactory>();
             StrategyFactory = new Mock<IStrategyFactory>();
             InputProvider = new Mock<ISecondaryInputProvider>();
+            ConsoleReadMock = new Mock<IConsoleReadWrap>();
         }
 
         [TestMethod]
@@ -32,8 +34,8 @@ namespace DurakTest
             //Arrange
             //Act
             //Assert
-            Assert.ThrowsException<NullReferenceException>(() => new PlayerSetter(Configuration.Object,
-                PlayerFactory.Object, StrategyFactory.Object, null));
+            Assert.ThrowsException<NullReferenceException>(() => new GameSetter(Configuration.Object,InputProvider.Object,
+                PlayerFactory.Object, null));
         }
 
         [TestMethod]
@@ -41,13 +43,13 @@ namespace DurakTest
         {
             //Arrange
             //Act
-            var playerSetter = new PlayerSetter(Configuration.Object,
-                PlayerFactory.Object, StrategyFactory.Object, InputProvider.Object);
+            var gameSetter = new GameSetter(Configuration.Object, InputProvider.Object,
+                PlayerFactory.Object, StrategyFactory.Object);
             //Assert
-            Assert.IsNotNull(playerSetter.Configuration);
-            Assert.IsNotNull(playerSetter.PlayerFactory);
-            Assert.IsNotNull(playerSetter.StrategyFactory);
-            Assert.IsNotNull(playerSetter.InputProvider);
+            Assert.IsNotNull(gameSetter.LanguageSet);
+            Assert.IsNotNull(gameSetter.PlayerFactory);
+            Assert.IsNotNull(gameSetter.StrategyFactory);
+            Assert.IsNotNull(gameSetter.InputProvider);
         }
 
         [TestMethod]
@@ -58,36 +60,19 @@ namespace DurakTest
             Configuration.Setup(x => x.Message.firstVar_15_).Returns(stringInput);
             Configuration.Setup(x => x.Message.secondVar_16_).Returns(It.IsAny<string>());
             Configuration.Setup(x => x.Constant.numberOfCards_1_).Returns(It.IsAny<int>());
-            StrategyFactory.Setup(x => x.CreateHumanStrategy()).Returns(new HumanStrategy(Configuration.Object));
+            StrategyFactory.Setup(x => x.CreateHumanStrategy()).Returns(new HumanStrategy(Configuration.Object, ConsoleReadMock.Object));
             PlayerFactory.Setup(x => x.CreatePlayer(StrategyFactory.Object.CreateHumanStrategy())).Returns(new Player(Configuration.Object, StrategyFactory.Object.CreateHumanStrategy()));
             InputProvider.Setup(x => x.ReturnUserNameInputValue()).Returns(stringInput);
-            //Act
-            var playerSetter = new PlayerSetter(Configuration.Object,
-                PlayerFactory.Object, StrategyFactory.Object, InputProvider.Object);
-            playerSetter.CreatePlayers();
-            //Assert
-            Assert.IsNotNull(playerSetter.player1);
-            Assert.IsNotNull(playerSetter.UserName);
-        }
-        [TestMethod]
-        public void PlayerSetterShouldCreateCPU_Player()
-        {
-            //Arrange
-            string stringInput = "fakeValue";
-            Configuration.Setup(x => x.Constant.strategy_1_4_).Returns(stringInput);
-            Configuration.Setup(x => x.Constant.strategy_2_5_).Returns(It.IsAny<string>());
-            Configuration.Setup(x => x.Constant.numberOfCards_1_).Returns(It.IsAny<int>());
+            StrategyFactory.Setup(x => x.CreateStrategyA()).Returns(value: new StrategyA(Configuration.Object, ConsoleReadMock.Object));
+            PlayerFactory.Setup(x => x.CreatePlayer(StrategyFactory.Object.CreateStrategyA())).Returns(new Player(Configuration.Object, StrategyFactory.Object.CreateStrategyA()));
 
-            InputProvider.Setup(x => x.ReturnStrategyTypeInputValue()).Returns(stringInput);
-            StrategyFactory.Setup(x => x.CreateStrategyA()).Returns(new StrategyA(Configuration.Object));
-            PlayerFactory.Setup(x => x.CreatePlayer(StrategyFactory.Object.CreateStrategyA())).Returns(new Player(Configuration.Object, StrategyFactory.Object.CreateHumanStrategy()));
-            StrategyFactory.Setup(x => x.CreateStrategyB()).Returns(It.IsAny<StrategyB>());
             //Act
-            var playerSetter = new PlayerSetter(Configuration.Object,
-                PlayerFactory.Object, StrategyFactory.Object, InputProvider.Object);
-            playerSetter.CreatePlayers();
+            var gameSetter = new GameSetter(Configuration.Object, InputProvider.Object,
+                PlayerFactory.Object, StrategyFactory.Object);
+            gameSetter.CreatePlayersFor36CardGame();
             //Assert
-            Assert.IsNotNull(playerSetter.player2);
+            Assert.IsNotNull(gameSetter.Players[0]);
+            Assert.IsNotNull(gameSetter.Players[1]);
         }
 
     }

@@ -4,17 +4,17 @@ namespace Durak
 {
     public class PlayerFactory : IPlayerFactory
     {
-        private IConfigurationSetter _configurationSetter;
+        public IConfigurationSetter ConfigurationSetter { get; }
 
 
         public PlayerFactory(IConfigurationSetter configurationSetter)
         {
-            _configurationSetter = configurationSetter;
+            ConfigurationSetter = configurationSetter;
         }
 
         public Player CreatePlayer(IStrategy strategy)
         {
-            return new Player(_configurationSetter,strategy);
+            return new Player(ConfigurationSetter, strategy);
         }
     }
 }

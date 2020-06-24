@@ -13,8 +13,8 @@ namespace Durak
         {
             if (languageConfiguration != null)
             {
-                Names = languageConfiguration.GetTextFromConfiguration("cardNames_2_").Split(new string[] { "," }, StringSplitOptions.None);
-                Suits = languageConfiguration.GetTextFromConfiguration("cardSuits_3_").Split(new string[] { "," }, StringSplitOptions.None);
+                Names = languageConfiguration.GetAttributesFromConfiguration("cardNames_2_").Split(new string[] { "," }, StringSplitOptions.None);
+                Suits = languageConfiguration.GetAttributesFromConfiguration("cardSuits_3_").Split(new string[] { "," }, StringSplitOptions.None);
             }
             else
             {

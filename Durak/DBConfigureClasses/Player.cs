@@ -1,14 +1,16 @@
-﻿using System;
-using System.CodeDom.Compiler;
+﻿using Durak.Interfaces;
+using System;
 using System.Collections.Generic;
-using Durak.Interfaces;
-using Durak.Properties;
+using System.ComponentModel.DataAnnotations;
 
 namespace Durak
 {
     public class Player : IPlayer
     {
-        public List<Card> CardsOnHands { get; }
+        public string PlayerName { get; set; }
+        public bool PlayerTurn { get; set; } = false;
+        public List<Card> CardsOnHands { get; set; }
+
         public IStrategy Strategy { get; }
         public IMessages Message { get; }
         public IDefaultConstants Constant { get; }
@@ -26,7 +28,7 @@ namespace Durak
 
         public Card Attack(List<Card> CardsOnTable)
         {
-           return Strategy.Attack(CardsOnHands, CardsOnTable);
+            return Strategy.Attack(CardsOnHands, CardsOnTable);
         }
 
         public Card Defend(List<Card> CardsOnTable, Card CardToBeat)

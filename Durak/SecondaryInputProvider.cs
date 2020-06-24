@@ -28,15 +28,27 @@ namespace Durak
             }
             catch (ArgumentOutOfRangeException)
             {
-                //log
                 ReturnUserNameInputValue();
             }
             catch (ArgumentNullException)
             {
-                //log
                 ReturnUserNameInputValue();
             }
             return userName;
+        }
+
+        public int ReturnTypeOfGame()
+        {
+            Console.WriteLine($"Choose game type to play");
+            Console.WriteLine($"1: to start 36 card game");
+            Console.WriteLine($"2: to start 54 card game");
+
+            var input = _consoleReadWrap.ConsoleReadLine();
+            int.TryParse(input, out int gameType);
+            if (gameType != 1 && gameType != 2)
+                ReturnTypeOfGame();
+
+            return gameType;
         }
 
         public string ReturnStrategyTypeInputValue()
@@ -56,12 +68,14 @@ namespace Durak
             {
                 //log
                 Console.WriteLine(e.StackTrace);
-                Console.ReadKey();
+                _consoleReadWrap.ConsoleReadKey();
                 ReturnStrategyTypeInputValue();
             }
 
             return CPUstrategyType;
         }
+
+       
 
     }
 }

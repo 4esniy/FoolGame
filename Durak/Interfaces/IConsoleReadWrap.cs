@@ -10,5 +10,7 @@ namespace Durak.Interfaces
     {
         string ConsoleReadLine();
         string ReadAppSettings();
+        void ConsoleReadKey();
+        void ReturnExit();
     }
 }

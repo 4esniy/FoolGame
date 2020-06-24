@@ -16,12 +16,12 @@ namespace Durak.TextClasses
         {
             if (languageConfiguration != null)
             {
-                enterInteger_1_ = languageConfiguration.GetTextFromConfiguration("enterInteger_1_");
-                enterNotBiggerThan_2_ = languageConfiguration.GetTextFromConfiguration("enterNotBiggerThan_2_");
-                enterPositiveNumber_3_ = languageConfiguration.GetTextFromConfiguration("enterPositiveNumber_3_");
-                enterNotLessThan10_4_ = languageConfiguration.GetTextFromConfiguration("enterNotLessThan10_4_");
-                userNameNotEmpty_5_ = languageConfiguration.GetTextFromConfiguration("userNameNotEmpty_5_");
-                noSuchStrategy_6_ = languageConfiguration.GetTextFromConfiguration("noSuchStrategy_6_");
+                enterInteger_1_ = languageConfiguration.GetAlertFromConfiguration("enterInteger_1_");
+                enterNotBiggerThan_2_ = languageConfiguration.GetAlertFromConfiguration("enterNotBiggerThan_2_");
+                enterPositiveNumber_3_ = languageConfiguration.GetAlertFromConfiguration("enterPositiveNumber_3_");
+                enterNotLessThan10_4_ = languageConfiguration.GetAlertFromConfiguration("enterNotLessThan10_4_");
+                userNameNotEmpty_5_ = languageConfiguration.GetAlertFromConfiguration("userNameNotEmpty_5_");
+                noSuchStrategy_6_ = languageConfiguration.GetAlertFromConfiguration("noSuchStrategy_6_");
             }
             else
             {
